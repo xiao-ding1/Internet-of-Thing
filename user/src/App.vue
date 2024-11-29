@@ -1,9 +1,9 @@
 <template>
-  <router-view />
+  <Index/>
 </template>
 
 <script setup>
-
+import Index from './pages/index.vue';
 </script>
 
 <style>

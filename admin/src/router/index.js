@@ -1,10 +1,25 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import Coding from '../components/Coding.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import Coding from "../components/Coding.vue";
+import BlueOpening from "../components/BlueOpening.vue";
+import SmartClass from "@/components/SmartClass.vue";
+import SmartOpening from "@/components/SmartOpening.vue";
 
 const routes = [
   {
-    path: '/code',
+    path: "/code",
     component: Coding, // 确保组件路径正确
+  },
+  {
+    path: "/blue",
+    component: BlueOpening,
+  },
+  {
+    path: "/smartOpen",
+    component: SmartOpening,
+  },
+  {
+    path: "/smartClass",
+    component: SmartClass,
   },
 ];
 

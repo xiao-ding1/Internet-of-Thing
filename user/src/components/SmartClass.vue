@@ -1,9 +1,12 @@
 <template>
-    <Index/>
+    <div>
+      智能教室
+    </div>
 </template>
     
 <script lang='ts' setup name=''>
-    import Index from './pages/index.vue';  
+    
+    
 </script>
     
 <style scoped>

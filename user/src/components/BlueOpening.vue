@@ -1,9 +1,10 @@
 <template>
-    <Index/>
+    <div>蓝牙开门</div>
 </template>
     
 <script lang='ts' setup name=''>
-    import Index from './pages/index.vue';  
+    
+    
 </script>
     
 <style scoped>
