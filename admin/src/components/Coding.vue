@@ -22,7 +22,7 @@ const codearea = ref(null);
 let editorInstance;
 
 const language = ref('javascript');
-const theme = ref('vs-dark');
+const theme = ref('vs-light');
 
 onMounted(() => {
   editorInstance = monaco.editor.create(codearea.value, {

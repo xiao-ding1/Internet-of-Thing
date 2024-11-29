@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Coding from "../components/Coding.vue";
+import CodePage from "@/components/CodePage.vue";
 import BlueOpening from "../components/BlueOpening.vue";
 import SmartClass from "@/components/SmartClass.vue";
 import SmartOpening from "@/components/SmartOpening.vue";
@@ -7,7 +7,7 @@ import SmartOpening from "@/components/SmartOpening.vue";
 const routes = [
   {
     path: "/code",
-    component: Coding, // 确保组件路径正确
+    component: CodePage, // 确保组件路径正确
   },
   {
     path: "/blue",
