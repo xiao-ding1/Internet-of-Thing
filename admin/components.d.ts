@@ -7,6 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BlueOpening: typeof import('./src/components/BlueOpening.vue')['default']
+    CodePage: typeof import('./src/components/CodePage.vue')['default']
+    Coding: typeof import('./src/components/Coding.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
@@ -17,13 +20,18 @@ declare module 'vue' {
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElLink: typeof import('element-plus/es')['ElLink']
+    ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Home: typeof import('./src/components/Home.vue')['default']
     HomeHeader: typeof import('./src/components/home/HomeHeader.vue')['default']
     HomeMain: typeof import('./src/components/home/HomeMain.vue')['default']
+    LampControl: typeof import('./src/components/LampControl.vue')['default']
     Register: typeof import('./src/components/Register.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SmartClass: typeof import('./src/components/SmartClass.vue')['default']
+    SmartOpening: typeof import('./src/components/SmartOpening.vue')['default']
     UpdateUser: typeof import('./src/components/UpdateUser.vue')['default']
     User: typeof import('./src/components/User.vue')['default']
   }

@@ -3,7 +3,7 @@ import CodePage from "@/components/CodePage.vue";
 import BlueOpening from "../components/BlueOpening.vue";
 import SmartClass from "@/components/SmartClass.vue";
 import SmartOpening from "@/components/SmartOpening.vue";
-
+import LampControl from "@/components/LampControl.vue";
 const routes = [
   {
     path: "/code",
@@ -21,6 +21,10 @@ const routes = [
     path: "/smartClass",
     component: SmartClass,
   },
+  {
+    path:"/LampControl",
+    component:LampControl
+  }
 ];
 
 const router = createRouter({

@@ -22,7 +22,7 @@ function changeTab() {
   if (tabValue.value == '2') {
     router.replace('/blue')//蓝牙开门
   }else if (tabValue.value == '3') {
-    router.replace('/3')//网络控灯
+    router.replace('/LampControl')//网络控灯
   }else if (tabValue.value == '4') {
     router.replace('/smartOpen')//智能门禁
   } else if (tabValue.value == '5') {
