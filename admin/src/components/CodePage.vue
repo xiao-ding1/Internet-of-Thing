@@ -10,19 +10,48 @@
     </div>
 
     <!-- 显示 Coding 组件区域 -->
+    <!-- <div class="content">
+        <Splitter v-if="isProjectOpen">
+            <template #top>
+            <Coding @toggleCompileOutput="toggleCompileOutput" />
+            </template>
+            <template #bottom>
+            <CompileOutput v-if="showCompileOutput" />
+            </template>
+        </Splitter>
+    </div> -->
     <div class="content">
-    <Coding v-if="isProjectOpen" />
+        <!-- 根据 isProjectOpen 控制 Splitter 的显示 -->
+        <Splitter v-if="isProjectOpen && showCompileOutput">
+          <template #top>
+            <Coding @toggleCompileOutput="toggleCompileOutput" />
+          </template>
+          <template #bottom>
+            <CompileOutput />
+          </template>
+        </Splitter>
+        
+        <!-- 当 CompileOutput 隐藏时，只显示 Coding 组件 -->
+        <div v-else-if="isProjectOpen && !showCompileOutput">
+          <Coding @toggleCompileOutput="toggleCompileOutput" />
+        </div>
     </div>
 </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import Coding from './Coding.vue'; // 引入 Coding 组件
+import Coding from './Coding.vue';
+import CompileOutput from './CompileOutput.vue';
+import Splitter from './Splitter.vue';
 
 // 使用 ref 来声明响应式变量
 const isProjectOpen = ref(false);
+const showCompileOutput = ref(false);
 
+const toggleCompileOutput = () => {
+  showCompileOutput.value = !showCompileOutput.value;
+};
 // 打开工程的方法
 const openProject = () => {
 isProjectOpen.value = true;

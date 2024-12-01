@@ -9,6 +9,9 @@
       <button @click="toggleTheme">
         切换到{{ theme === 'vs-dark' ? '明亮模式' : '夜间模式' }}
       </button>
+      <button @click="toggleCompileOutput">
+        {{ showCompileOutput ? '隐藏编译输出' : '显示编译输出' }}
+      </button>
     </div>
     <div class="codearea" ref="codearea"></div>
   </div>
@@ -66,6 +69,11 @@ const changeLanguage = () => {
 const toggleTheme = () => {
   theme.value = theme.value === 'vs-dark' ? 'vs-light' : 'vs-dark';
   monaco.editor.setTheme(theme.value);
+};
+
+const emit = defineEmits(['toggleCompileOutput']);
+const toggleCompileOutput = () => {
+  emit('toggleCompileOutput');
 };
 </script>
 
