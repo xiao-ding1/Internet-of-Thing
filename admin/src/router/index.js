@@ -4,6 +4,7 @@ import BlueOpening from "../components/BlueOpening.vue";
 import SmartClass from "@/components/SmartClass.vue";
 import SmartOpening from "@/components/SmartOpening.vue";
 import LampControl from "@/components/LampControl.vue";
+import SmartStorage from "@/components/SmartStorage.vue";
 const routes = [
   {
     path: "/code",
@@ -22,8 +23,12 @@ const routes = [
     component: SmartClass,
   },
   {
-    path:"/LampControl",
+    path:"/lampControl",
     component:LampControl
+  },
+  {
+    path:"/smartStorage",
+    component:SmartStorage
   }
 ];
 

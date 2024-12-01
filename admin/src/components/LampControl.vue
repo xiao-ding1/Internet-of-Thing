@@ -1,7 +1,7 @@
 <template>
   <div class="top">
     <h1 class="centered-title">网    络    控    灯</h1> 
-    <text v-if="showTitle" ref="title" class="text">{{ currentText }}</text>
+    <text v-if="showTitle" ref="title" class="lambtext">{{ currentText }}</text>
   </div>
   <div class="container">
     <img v-if="!isClicked" ref="lampImg" src="../assets/img/不亮灯泡.png" class="lamp1" :style="{animation: 'bounce 3s infinite alternate'}" @click="toggleImage" />
@@ -83,7 +83,7 @@ const toggleImage = () => {
     opacity: 1;
   }
 }
-.text {
+.lambtext {
   display: block;
   width: 150px;
   height: 20px;
@@ -92,6 +92,7 @@ const toggleImage = () => {
   font-size: 16px;
   color: rgb(79, 83, 83);
   transition: opacity 1s ease-in-out; 
+  text-shadow: 0 4px 10px rgb(0, 0, 0, 0.2);
 }
 .text.show {
   opacity: 1;
