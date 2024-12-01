@@ -17,6 +17,7 @@
   </el-select>
   <el-button type="success" @click="performStockOperation('in')">入库</el-button>
   <el-button type="warning" @click="performStockOperation('out')">出库</el-button>
+  <el-select placeholder="请选择设备" class="query-select"></el-select>
   </div>
   <el-table 
   style="width: 99.97%;height:550px;--el-table-border-color: none;border-right: 1px #143275 solid;border-left: 1px #143275 solid;border-bottom: 1px #143275 solid;"
@@ -315,44 +316,6 @@ watch(tableData, () => {
 </script>
 
 <style scoped>
-.top {
-  margin: auto;
-  margin-top: 10px;
-  height: 100px;
-  width: 500px;
-  
-}
-.centered-title {
-  font-size: 40px;
-  text-align: center;
-  margin: 0px auto; 
-  width: 50%; 
-  opacity: 0; 
-  animation: show-up 1s linear forwards;
-  text-shadow: 0 4px 10px rgb(0, 0, 0, 0.2);
-}
-@keyframes show-up {
-  to {
-    opacity: 1;
-  }
-}
-.text {
-  display: block;
-  width: 200px;
-  height: 20px;
-  opacity: 1;
-  margin: 10px auto;
-  font-size: 14px;
-  color: rgb(79, 83, 83);
-  transition: opacity 1s ease-in-out; 
-  text-shadow: 0 4px 10px rgb(0, 0, 0, 0.2);
-  margin-bottom: 10px;
-  margin-left: 160px;
-}
-.text.show {
-  opacity: 1;
-  animation: text-pop 0.6s linear forwards; /* 添加文字弹出动画 */
-}
 .query-select {
   width: 150px;
   margin-left: 5px;

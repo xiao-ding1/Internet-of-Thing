@@ -30,7 +30,7 @@ function changeTab() {
   }else if (tabValue.value == '6') {
     router.replace('/smartClass')//智能教室
   }else if(tabValue.value=='7'){
-    router.replace('/7')//智慧农场
+    router.replace('/smartFarm')//智慧农场
   } else {
     router.replace('/code')
   }

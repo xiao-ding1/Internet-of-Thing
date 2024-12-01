@@ -1,7 +1,7 @@
 <template>
   <div class="top">
     <h1 class="centered-title">网    络    控    灯</h1> 
-    <text v-if="showTitle" ref="title" class="lambtext">{{ currentText }}</text>
+    <text v-if="showTitle" ref="title" class="text">{{ currentText }}</text>
   </div>
   <div class="container">
     <img v-if="!isClicked" ref="lampImg" src="../assets/img/不亮灯泡.png" class="lamp1" :style="{animation: 'bounce 3s infinite alternate'}" @click="toggleImage" />
@@ -63,51 +63,6 @@ const toggleImage = () => {
 </script>
 
 <style>
-.top {
-  margin: auto;
-  margin-top: 40px;
-  height: 80px;
-  width: 500px;
-}
-.centered-title {
-  font-size: 40px;
-  text-align: center;
-  margin: 0px auto; 
-  width: 50%; 
-  opacity: 0; 
-  animation: show-up 1s linear forwards;
-  text-shadow: 0 4px 10px rgb(0, 0, 0, 0.2);
-}
-@keyframes show-up {
-  to {
-    opacity: 1;
-  }
-}
-.lambtext {
-  display: block;
-  width: 150px;
-  height: 20px;
-  opacity: 1;
-  margin: 10px auto;
-  font-size: 16px;
-  color: rgb(79, 83, 83);
-  transition: opacity 1s ease-in-out; 
-  text-shadow: 0 4px 10px rgb(0, 0, 0, 0.2);
-}
-.text.show {
-  opacity: 1;
-  animation: text-pop 0.6s linear forwards; /* 添加文字弹出动画 */
-}
-@keyframes text-pop {
-  0% {
-    transform: translateY(20px); /* 初始位置向上偏移 20 像素 */
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 .phone {
   position: relative;
   display: block;

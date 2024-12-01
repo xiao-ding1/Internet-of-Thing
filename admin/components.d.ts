@@ -37,6 +37,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SmartClass: typeof import('./src/components/SmartClass.vue')['default']
+    SmartFarm: typeof import('./src/components/SmartFarm.vue')['default']
     SmartOpening: typeof import('./src/components/SmartOpening.vue')['default']
     SmartStorage: typeof import('./src/components/SmartStorage.vue')['default']
     Splitter: typeof import('./src/components/Splitter.vue')['default']
