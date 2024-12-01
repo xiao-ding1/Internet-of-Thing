@@ -1,42 +1,45 @@
 <template>
-<div class="main-page">
+  <div class="main-page">
     <!-- 工具栏 -->
     <div class="toolbar">
-    <button @click="openProject">打开工程</button>
-    <button @click="saveProject">保存</button>
-    <button @click="compileProject">编译</button>
-    <button @click="burnProject">烧录</button>
-    <button @click="closeProject">关闭</button>
+      <button @click="openProjectDialog">打开工程</button>
+      <button @click="saveProject" :disabled="!isProjectOpen">保存</button>
+      <button @click="compileProject" :disabled="!isProjectOpen">编译</button>
+      <button @click="burnProject" :disabled="!isProjectOpen">烧录</button>
+      <button @click="closeProject" :disabled="!isProjectOpen">关闭</button>
     </div>
 
-    <!-- 显示 Coding 组件区域 -->
-    <!-- <div class="content">
-        <Splitter v-if="isProjectOpen">
-            <template #top>
-            <Coding @toggleCompileOutput="toggleCompileOutput" />
-            </template>
-            <template #bottom>
-            <CompileOutput v-if="showCompileOutput" />
-            </template>
-        </Splitter>
-    </div> -->
+    <!-- 内容区域 -->
     <div class="content">
-        <!-- 根据 isProjectOpen 控制 Splitter 的显示 -->
-        <Splitter v-if="isProjectOpen && showCompileOutput">
-          <template #top>
-            <Coding @toggleCompileOutput="toggleCompileOutput" />
-          </template>
-          <template #bottom>
-            <CompileOutput />
-          </template>
-        </Splitter>
-        
-        <!-- 当 CompileOutput 隐藏时，只显示 Coding 组件 -->
-        <div v-else-if="isProjectOpen && !showCompileOutput">
+      <!-- 根据 isProjectOpen 控制 Splitter 的显示 -->
+      <Splitter v-if="isProjectOpen && showCompileOutput">
+        <template #top>
           <Coding @toggleCompileOutput="toggleCompileOutput" />
-        </div>
+        </template>
+        <template #bottom>
+          <CompileOutput />
+        </template>
+      </Splitter>
+
+      <!-- 当 CompileOutput 隐藏时，只显示 Coding 组件 -->
+      <div v-else-if="isProjectOpen && !showCompileOutput">
+        <Coding @toggleCompileOutput="toggleCompileOutput" />
+      </div>
     </div>
-</div>
+
+    <!-- 弹出框：选择工程 -->
+    <div class="dialog" v-if="showDialog">
+      <div class="dialog-content">
+        <h3>选择工程</h3>
+        <ul>
+          <li v-for="(project, index) in projects" :key="index" @click="selectProject(project)">
+            {{ project.name }}
+          </li>
+        </ul>
+        <button class="close-btn" @click="closeDialog">关闭</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -45,71 +48,140 @@ import Coding from './Coding.vue';
 import CompileOutput from './CompileOutput.vue';
 import Splitter from './Splitter.vue';
 
-// 使用 ref 来声明响应式变量
+// 控制工程状态
 const isProjectOpen = ref(false);
 const showCompileOutput = ref(false);
 
+// 控制弹出框
+const showDialog = ref(false);
+const projects = ref([
+  { name: '工程 1' },
+  { name: '工程 2' },
+  { name: '工程 3' },
+  { name: '工程 4' },
+  { name: '工程 5' },
+  { name: '工程 6' },
+]);
+
+// 打开弹出框
+const openProjectDialog = () => {
+  showDialog.value = true;
+};
+
+// 关闭弹出框
+const closeDialog = () => {
+  showDialog.value = false;
+};
+
+// 选择项目
+const selectProject = (project) => {
+  console.log(`打开 ${project.name}`);
+  isProjectOpen.value = true;
+  showDialog.value = false;
+};
+
+// 切换编译输出
 const toggleCompileOutput = () => {
   showCompileOutput.value = !showCompileOutput.value;
 };
-// 打开工程的方法
-const openProject = () => {
-isProjectOpen.value = true;
-};
 
-// 保存项目的方法
+// 保存项目
 const saveProject = () => {
-console.log('项目已保存');
-// 这里可以添加保存的具体逻辑，比如通过 API 请求保存数据
+  console.log('项目已保存');
 };
 
-// 编译项目的方法
+// 编译项目
 const compileProject = () => {
-console.log('项目正在编译');
-// 这里可以添加编译的具体逻辑，比如调用编译 API 或者在 Monaco 中编译代码
+  console.log('项目正在编译');
 };
 
-// 烧录项目的方法
+// 烧录项目
 const burnProject = () => {
-console.log('项目正在烧录');
-// 这里可以添加烧录的具体逻辑，比如模拟烧录到硬件的过程
+  console.log('项目正在烧录');
 };
 
-// 关闭项目的方法
+// 关闭项目
 const closeProject = () => {
-isProjectOpen.value = false;
-console.log('项目已关闭');
+  isProjectOpen.value = false;
+  console.log('项目已关闭');
 };
+
 </script>
 
 <style scoped>
 .main-page {
-display: flex;
-flex-direction: column;
-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .toolbar {
-background-color: #f4f4f4;
-padding: 10px;
-display: flex;
-justify-content: flex-start;
-align-items: center;
+  background-color: #f4f4f4;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .content {
-flex-grow: 1;
-padding: 10px;
+  flex-grow: 1;
+  padding: 10px;
 }
 
 button {
-padding: 10px;
-font-size: 14px;
-cursor: pointer;
-margin-right: 10px;
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
 }
 
-button:last-child {
-margin-right: 0;
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.dialog-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dialog-content li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.dialog-content li:hover {
+  background: #f0f0f0;
+}
+
+.close-btn {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>

@@ -46,4 +46,7 @@ function changeTab() {
   height: 100vh;
   overflow: hidden;
 }
+.demo-tabs{
+  height:100vh;
+}
 </style>
