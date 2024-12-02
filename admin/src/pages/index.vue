@@ -43,7 +43,7 @@ function changeTab() {
   margin: 0;
 }
 .el-tab-pane{
-  height: 100vh;
+  height: calc(100vh - 50px); /* 减去工具栏高度 */
   overflow: hidden;
 }
 </style>
