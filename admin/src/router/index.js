@@ -3,7 +3,9 @@ import CodePage from "@/components/CodePage.vue";
 import BlueOpening from "../components/BlueOpening.vue";
 import SmartClass from "@/components/SmartClass.vue";
 import SmartOpening from "@/components/SmartOpening.vue";
-
+import LampControl from "@/components/LampControl.vue";
+import SmartStorage from "@/components/SmartStorage.vue";
+import SmartFarm from "@/components/SmartFarm.vue";
 const routes = [
   {
     path: "/code",
@@ -21,6 +23,18 @@ const routes = [
     path: "/smartClass",
     component: SmartClass,
   },
+  {
+    path:"/lampControl",
+    component:LampControl
+  },
+  {
+    path:"/smartStorage",
+    component:SmartStorage
+  },
+  {
+    path:"/smartFarm",
+    component:SmartFarm
+  }
 ];
 
 const router = createRouter({
