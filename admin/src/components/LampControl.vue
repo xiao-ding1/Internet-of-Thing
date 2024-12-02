@@ -3,7 +3,8 @@
     <h1 class="centered-title">网    络    控    灯</h1> 
     <text v-if="showTitle" ref="title" class="text">{{ currentText }}</text>
   </div>
-  <div class="container">
+  <GetDevice/>
+  <div>
     <img v-if="!isClicked" ref="lampImg" src="../assets/img/不亮灯泡.png" class="lamp1" :style="{animation: 'bounce 3s infinite alternate'}" @click="toggleImage" />
     <img v-else :style="newImageStyle" src="../assets/img/亮灯泡.png" class="lamp1" @click="toggleImage" />
     <img src="../assets/img/手机.png" class="phone">
@@ -12,6 +13,7 @@
 
 <script setup>
 import { ref, onBeforeUpdate, onMounted } from 'vue';
+import GetDevice from './GetDevice.vue';
 const lampImg = ref(null)
 const isClicked = ref(false)
 const newImageStyle = ref({})
