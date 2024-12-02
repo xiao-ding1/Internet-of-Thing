@@ -29,6 +29,7 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    GetDevice: typeof import('./src/components/GetDevice.vue')['default']
     Home: typeof import('./src/components/Home.vue')['default']
     HomeHeader: typeof import('./src/components/home/HomeHeader.vue')['default']
     HomeMain: typeof import('./src/components/home/HomeMain.vue')['default']
