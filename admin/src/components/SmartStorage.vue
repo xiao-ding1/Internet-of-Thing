@@ -1,8 +1,5 @@
 <template>
-  <div class="top">
-    <h1 class="centered-title">智 能 仓 储</h1>
-    <text v-if="showTitle" ref="title" class="text">{{ currentText }}</text>
-  </div>
+  <Title :text="text" :subtext="subtext"/>
   <div style="margin-bottom: 20px;">
   <el-button type="primary" @click="openDialog">商品信息录入</el-button>
   
@@ -71,7 +68,8 @@
 </template>
 
 <script setup>
-import { ref,watch } from 'vue';
+import { ref, watch } from 'vue';
+import Title from './Title.vue';
 
 // 对话框是否可见
 const dialogVisible = ref(false)
@@ -207,25 +205,8 @@ const queryType = ref('')
 // 二级查询类型（用于选择商品种类查询数量时）
 const secondQueryType = ref('')
 // 是否显示标题
-const showTitle = ref(true)
-let text = "你想知道的仓储信息都在这"
-const currentText = ref('')
-let index = 0
-
-// 展示标题动画效果
-const showCenteredTitle = () => {
-  showTitle.value = true
-  const interval = setInterval(() => {
-    if (index < text.length) {
-      currentText.value += text[index]
-      index++
-    } else {
-      clearInterval(interval)
-    }
-  }, 100)
-}
-
-setTimeout(showCenteredTitle, 1000)
+const text = '智 能 仓 储'
+const subtext = "你想知道的仓储信息都在这"
 
 // 打开商品信息录入对话框
 const openDialog = () => {

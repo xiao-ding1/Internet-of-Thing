@@ -1,5 +1,5 @@
 <template>
-    <h1>欢迎体验蓝牙开门</h1>
+    <Title :text="text" :subtext="subtext"/>
     <div class="showCase">
         <div class="myPhone"><img src="../static/iphone.png" alt="iphone"></div>
         <div class="link">
@@ -8,7 +8,7 @@
                 <el-icon v-if="isConnect" class="connectClass"><Connection/></el-icon>
                 <el-icon v-else><CloseBold /></el-icon>
             </div>
-            <div class="connectWaring" v-if="!isConnect">连接失败，请重试</div>
+            <div class="connectWaring" v-if="!isConnect">蓝牙未匹配，请重试</div>
         </div>
         <div class="lockBox">
             <div class="lock" :style="lockAniStyle"></div>
@@ -18,12 +18,18 @@
 </template>
     
 <script lang='ts' setup name='BlueOpening'>
+import Title from './Title.vue';
 import { onMounted, ref } from 'vue'
 import { Connection } from '@element-plus/icons-vue';
-let isLock = ref(true)
+//标题
+const subtext = "智联门禁 实时监测"
+const text = '蓝    牙    开    门'
+//门锁
+let isLock = ref(false)
 let lockAniStyle = ref({})
-let isConnect = ref(true)
 let status = ref('门锁已关闭')
+//蓝牙匹配
+let isConnect = ref(false)
 function getDoorInfo() {
     //获取单片机蓝牙信息
     //蓝牙是否匹配isConnect
@@ -80,7 +86,7 @@ onMounted(() => {
         background-color: transparent;
     }
     .myPhone img{
-        width: 60%;
+        width: 50%;
     }
     /* 连接线的样式 */
     .linkLine{

@@ -1,8 +1,5 @@
 <template>
-  <div class="top">
-    <h1 class="centered-title">网    络    控    灯</h1> 
-    <text v-if="showTitle" ref="title" class="text">{{ currentText }}</text>
-  </div>
+  <Title :text="text" :subtext="subtext"/>
   <div class="container">
     <img v-if="!isClicked" ref="lampImg" src="../assets/img/不亮灯泡.png" class="lamp1" :style="{animation: 'bounce 3s infinite alternate'}" @click="toggleImage" />
     <img v-else :style="newImageStyle" src="../assets/img/亮灯泡.png" class="lamp1" @click="toggleImage" />
@@ -11,29 +8,13 @@
 </template>
 
 <script setup>
+import Title from './Title.vue';
 import { ref, onBeforeUpdate, onMounted } from 'vue';
 const lampImg = ref(null)
 const isClicked = ref(false)
 const newImageStyle = ref({})
-const showTitle = ref(false)
-const title = ref(null)
-const text = "智能控灯 由此开始"
-const currentText = ref('')
-let index = 0
-
-const showCenteredTitle = () => {
-  showTitle.value = true
-  const interval = setInterval(() => {
-    if (index < text.length) {
-      currentText.value += text[index]
-      index++
-    } else {
-      clearInterval(interval)
-    }
-  }, 100)
-}
-
-setTimeout(showCenteredTitle, 1000)
+const subtext = "智能控灯 由此开始"
+const text = '网    络    控    灯'
 onMounted(() => {
 })
 
