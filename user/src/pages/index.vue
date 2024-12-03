@@ -1,21 +1,34 @@
 <template>
-  <nav class="menu">
-    <input type="checkbox" v-model="isMenuOpen" class="menu-toggler" id="menu_toggler" />
-    <label for="menu_toggler"></label>
-    <ul>
-      <li>
-        <span  class="menu-item" v-for="(item, index) in menuItems" :key="index" @click="navigateToComponent(index)"></span>
-      </li>
-    </ul>
-  </nav>
-  <RouterView/>
+  <div :style="{animationName:isMenuShow?'menuShow':'menuHid'}" class="menuPage">
+    <div class="closeMenu" @click="hidMenu"><el-icon><CloseBold /></el-icon></div>
+    <nav class="menu">
+      <input type="checkbox" v-model="isMenuOpen" class="menu-toggler" id="menu_toggler" />
+      <label for="menu_toggler"></label>
+      <ul>
+        <li>
+          <span  class="menu-item" v-for="(item, index) in menuItems" :key="index" @click="navigateToComponent(index)"></span>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="content">
+    <button class="backMenu" @click="openMenu"><el-icon><ArrowLeft /></el-icon></button>
+    <RouterView/>
+  </div>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
-import { useRouter} from 'vue-router';
+import { useRouter } from 'vue-router';
 // 定义响应式数据，用于控制菜单是否展开
 const isMenuOpen = ref(true)
+const isMenuShow = ref(true)
+function openMenu() {
+  isMenuShow.value = true
+}
+function hidMenu() {
+  isMenuShow.value = false
+}
 const menuItems = ref([
   { imageSrc: '../assets/img/太阳.png' },
   { imageSrc: '../assets/img/太阳.png' },
@@ -30,7 +43,8 @@ const navigateToComponent = (index) => {
   const routeNames = ['/blue', '/smartOpen', '/smartClass']
   const routeName = routeNames[index]
   if (routeName) {
-    router.replace({ path:routeName })
+    router.replace({ path: routeName })
+    isMenuShow.value = false
   }
 }
 
@@ -61,7 +75,49 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
+.menuPage{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateX(0);
+  transition: 1s;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  animation: menuShow 1s linear forwards;
+}
+.closeMenu{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 50px;
+}
+.backMenu{
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(0,0,0,.1);
+  font-size: 40px;
+}
+@keyframes menuShow {
+  100%{
+    transform: translateX(0);
+  }
+}
+@keyframes menuHid {
+  100%{
+    transform: translateX(-100vw);
+  }
+}
 .menu {
   width: 500px; 
   height: 500px; 

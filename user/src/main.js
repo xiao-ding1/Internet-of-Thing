@@ -12,11 +12,11 @@ const app = createApp(App);
 // 使用router
 app.use(router);
 
-// 使用element plus
-app.use(ElementPlus);
-app.mount("#app");
-
 // 引入所有的icon
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
 }
+
+// 使用element plus
+app.use(ElementPlus);
+app.mount("#app");

@@ -20,7 +20,6 @@
 <script lang='ts' setup name='BlueOpening'>
 import Title from './Title.vue';
 import { onMounted, ref } from 'vue'
-import { Connection } from '@element-plus/icons-vue';
 //标题
 const subtext = "智联门禁 实时监测"
 const text = '蓝    牙    开    门'
