@@ -42,6 +42,7 @@ declare module 'vue' {
     SmartOpening: typeof import('./src/components/SmartOpening.vue')['default']
     SmartStorage: typeof import('./src/components/SmartStorage.vue')['default']
     Splitter: typeof import('./src/components/Splitter.vue')['default']
+    Title: typeof import('./src/components/Title.vue')['default']
     UpdateUser: typeof import('./src/components/UpdateUser.vue')['default']
     User: typeof import('./src/components/User.vue')['default']
   }
