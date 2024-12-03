@@ -3,7 +3,7 @@
 </template>
     
 <script lang='ts' setup name=''>
-    import Index from './pages/index.vue';  
+    import Index from '@/pages/index.vue';  
 </script>
     
 <style>

@@ -133,7 +133,7 @@ onMounted(() => {
         display: flex;
         position: relative;
         justify-content: center;
-        width: 30%;
+        width: 140px;
         height: 100px;
         border-radius: 10%;
         background-color: #ccc;
@@ -144,19 +144,19 @@ onMounted(() => {
         content: '';
         position: absolute;
         z-index: -1;
-        top: -60%;
+        top: -60px;
         background-color: #fff;
         border-radius: 40%;
         border: 12px solid #ccc;
-        width: 60%;
-        height: 80%;
+        width: 70px;
+        height: 100px;
         animation: var(--ring-style1) 1.3s linear forwards;
     }
     .lock::after{
         content: '';
         z-index: -1;
         position: absolute;
-        left: 0;
+        left: 23px;
         width: 20%;
         height: 30%;
         background-color: #fff;

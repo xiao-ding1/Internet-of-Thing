@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import CodePage from "@/components/CodePage.vue";
 import BlueOpening from "../components/BlueOpening.vue";
 import SmartClass from "@/components/SmartClass.vue";
@@ -38,7 +38,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(), // 使用 HTML5 模式的路由历史记录
+  history:createWebHashHistory(), // 使用 HTML5 模式的路由历史记录
   routes,
 });
 
