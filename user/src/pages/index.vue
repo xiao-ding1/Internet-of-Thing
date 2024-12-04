@@ -26,7 +26,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 // 定义响应式数据，用于控制菜单是否展开
-const isMenuOpen = ref(true)
+const isMenuOpen = ref(false)
 const isMenuShow = ref(true)
 function openMenu() {
   isMenuShow.value = true
