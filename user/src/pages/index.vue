@@ -2,8 +2,13 @@
   <div :style="{animationName:isMenuShow?'menuShow':'menuHid'}" class="menuPage">
     <div class="closeMenu" @click="hidMenu"><el-icon><CloseBold /></el-icon></div>
     <nav class="menu">
-      <input type="checkbox" v-model="isMenuOpen" class="menu-toggler" id="menu_toggler" />
-      <label for="menu_toggler"></label>
+      <div class="ring">
+        <i style="--clr:#00ff0a;"></i>
+        <i style="--clr:#ff0057;"></i>
+        <i style="--clr:#fffd44;"></i>
+      <input type="checkbox" v-model="isMenuOpen" class="menu-toggler" id="menu_toggler"/>
+         <label for="menu_toggler"></label>
+      </div>
       <ul>
         <li>
           <span  class="menu-item" v-for="(item, index) in menuItems" :key="index" @click="navigateToComponent(index)"></span>
@@ -12,7 +17,7 @@
     </nav>
   </div>
   <div class="content">
-    <button class="backMenu" @click="openMenu"><el-icon><ArrowLeft /></el-icon></button>
+    <button  class="backMenu" @click="openMenu"><el-icon><ArrowLeft /></el-icon></button>
     <RouterView/>
   </div>
 </template>
@@ -40,7 +45,7 @@ const menuItems = ref([
 ])
 const router = useRouter()
 const navigateToComponent = (index) => {
-  const routeNames = ['/blue', '/smartOpen', '/smartClass']
+  const routeNames = ['/blue', '/smartOpen', '/smartClass','smartFarm','smartStorage','lampControl']
   const routeName = routeNames[index]
   if (routeName) {
     router.replace({ path: routeName })
@@ -76,6 +81,9 @@ onMounted(() => {
 </script>
 
 <style>
+.content{
+  width:100vw;
+  height: 100vh;}
 .menuPage{
   position: fixed;
   top: 0;
@@ -88,7 +96,7 @@ onMounted(() => {
   transition: 1s;
   width: 100vw;
   height: 100vh;
-  background-color: #fff;
+  background-color: #1709b1;
   animation: menuShow 1s linear forwards;
 }
 .closeMenu{
@@ -262,5 +270,36 @@ onMounted(() => {
   top: 80px;
   left: -190px;
   background-image: url('../../assets/img/太阳.png');
+}
+.ring i{
+  position:absolute;
+  border:  2px solid black;
+  inset: 0;
+  transition:  all 0.5s;
+
+}
+.ring i:nth-child(1){
+  animation: animate 10s linear infinite;
+  border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+}
+.ring i:nth-child(2){
+  border-radius: 41% 44% 56% 59% / 38% 62% 63% 37%;
+  animation: animate 4s linear infinite;
+}
+.ring i:nth-child(3){
+  border-radius: 41% 44% 56% 68% / 38% 62% 63% 37%;
+  animation: animate 6s linear infinite;
+}
+.ring i{
+  border:6px solid var(--clr);
+  filter:drop-shadow(0 0 20px var(--clr))
+}
+@keyframes animate {
+  0%{
+    transform: rotate(0);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
 }
 </style>
