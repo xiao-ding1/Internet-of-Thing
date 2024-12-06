@@ -117,4 +117,7 @@
 .filterAction .el-check-tag{
     margin: 5px;
 }
+.el-table{
+    flex: 1;
+}
 </style>

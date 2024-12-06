@@ -1,5 +1,12 @@
 <template>
-  <el-tabs type="border-card" class="demo-tabs" tabPosition="left" @tab-change="changeTab" v-model="tabValue">
+  <el-tabs 
+  type="border-card" 
+  class="custom-tabs" 
+  tabPosition="left"
+  @tab-change="changeTab"
+  v-model="tabValue" 
+  active-text-color="#ffd04b"
+  background-color="#545c64">
     <el-tab-pane label="感知实验" name="1"><RouterView /></el-tab-pane>
     <el-tab-pane label="蓝牙开门" name="2"><RouterView /></el-tab-pane>
     <el-tab-pane label="网络控灯" name="3"><RouterView /></el-tab-pane>
@@ -37,16 +44,21 @@ function changeTab() {
 }
 </script>
 
-<style scoped>
+<style>
 *{
   padding: 0;
   margin: 0;
 }
 .el-tab-pane{
+  display: flex;
+  flex-direction: column;
   height: calc(100vh - 50px); /* 减去工具栏高度 */
   overflow: hidden;
 }
-.demo-tabs{
+.custom-tabs{
   height:100vh;
+}
+.el-tabs__item.is-active{
+  background-color: pink;
 }
 </style>

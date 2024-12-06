@@ -1,0 +1,51 @@
+{
+  "id": "4773178",
+  "name": "device",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "12327035",
+      "name": "设备_窗帘_关",
+      "font_class": "curtain_off",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "18261789",
+      "name": "面性温度计图标",
+      "font_class": "mianxingwendujitubiao",
+      "unicode": "e6a4",
+      "unicode_decimal": 59044
+    },
+    {
+      "icon_id": "23052522",
+      "name": "风量=中高, 填充=yes",
+      "font_class": "a-fengliangzhonggaotianchongyes",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "25432708",
+      "name": "songpaifeng",
+      "font_class": "songpaifengxitong",
+      "unicode": "e89d",
+      "unicode_decimal": 59549
+    },
+    {
+      "icon_id": "39657464",
+      "name": "窗帘",
+      "font_class": "chuanglian",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "40586364",
+      "name": "光照强度",
+      "font_class": "guangzhaoqiangdu",
+      "unicode": "e6dd",
+      "unicode_decimal": 59101
+    }
+  ]
+}
