@@ -81,9 +81,6 @@ onMounted(() => {
 </script>
 
 <style>
-.content{
-  width:100vw;
-  height: 100vh;}
 .menuPage{
   position: fixed;
   top: 0;
