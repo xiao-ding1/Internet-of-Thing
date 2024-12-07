@@ -45,11 +45,13 @@ const menuItems = ref([
 ])
 const router = useRouter()
 const navigateToComponent = (index) => {
-  const routeNames = ['/blue', '/smartOpen', '/smartClass','smartFarm','smartStorage','lampControl']
-  const routeName = routeNames[index]
-  if (routeName) {
-    router.replace({ path: routeName })
-    isMenuShow.value = false
+  if (isMenuOpen.value) {
+    const routeNames = ['/blue', '/smartOpen', '/smartClass','smartFarm','smartStorage','lampControl']
+    const routeName = routeNames[index]
+    if (routeName) {
+      router.replace({ path: routeName })
+      isMenuShow.value = false
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
     <Title :text="text" :subtext="subtext"/>
     <div class="showCase">
-        <div class="myPhone"><img src="../static/iphone.png" alt="iphone"></div>
+        <div class="myPhone"><img src="../assets/img/iphone0.png" alt="iphone"></div>
         <div class="link">
             <div class="linkLine" :class="isConnect?'connectLine':'line'"></div>
             <div class="linkIcon">

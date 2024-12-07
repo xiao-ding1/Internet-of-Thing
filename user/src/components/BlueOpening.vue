@@ -1,103 +1,139 @@
 <template>
-    <div class="box">
-        <div class="deviceInfo" @click="OpenBlueTooth" v-loading="isLoading">
-            <div v-if="!connectInfo.isConnect" class="warningInfo">还未匹配，请开启蓝牙</div>
-            <ul v-else>
-                <li>
-                    <div class="info">{{ connectInfo.name }}</div>
-                    <span>设备信息</span>
-                </li>
-                <li>
-                    <div class="info">{{ connectInfo.status }}</div>
-                    <span>设备状态</span>
-                </li>
-            </ul>
+    <div class="page">
+        <div class="lead">
+            <img src="../assets/img/箭头.png" alt="">&nbsp;
+            <span>点击按钮开关门</span>
         </div>
-        <ul class="btn">
-            <li><el-button :type="isOn==true?'primary':'info'" @click="turnOn">开</el-button></li>
-            <li><el-button :type="isOn==false?'primary':'info'" @click="turnOff">关</el-button></li>
-        </ul>
+        <div class="deviceControlBtn"
+         @click="changeStatus"
+         :style="{ '--slr': isLoading ? 'controlLoading': ''}"
+         ></div>
+        <div class="deviceInfo">
+            <h1>{{curStatus}}</h1>
+            <p><span>设备信息：xxx</span>
+            <el-icon @click="getBlue"><Refresh /></el-icon></p>
+        </div>
     </div>
 </template>
     
 <script lang='ts' setup name='BlueOpening'>
-import { reactive, ref } from 'vue'
-let isOn = ref(false)
-function turnOn() {
-    isOn.value = true
-    //向设备发送信息
-    console.log(111);
-    
-}
-function turnOff() {
-    isOn.value = false
-    //向设备发送信息
-    console.log(222);
-    
-}
-let connectInfo = reactive({
-    isConnect:false,
-    name:'xxx',
-    status:'On'
-})
-function getBlue() {
-    //获取蓝牙匹配信息
-
-    //是否匹配
-    //设备信息，设备状态
-}
+import { onMounted,  ref } from 'vue'
+let isOn = ref(true)
 let isLoading = ref(false)
-function OpenBlueTooth() {
-    if (connectInfo.isConnect == false) {
-        //连接蓝牙
-        isLoading.value = true
-        setTimeout(() => {
-            //连接成功
-            connectInfo.isConnect = true
-            isLoading.value = false
-        },1000)
-    }
+let curStatus = ref('锁已开')
+function loadingText() {
+    let curAction = isOn.value?'正在关锁':'正在开锁'
+    curStatus.value = curAction
+    let num= 0
+    let timeId = setInterval(() => {
+        if (isLoading.value) {
+            if (num < 3) {
+                curStatus.value += '.'
+                num++
+            } else {
+                num = 0
+                curStatus.value = curAction
+            }
+        } else {
+            clearInterval(timeId)
+        }
+    },300)
 }
+function changeStatus() {
+    isLoading.value = true
+    loadingText()
+    setTimeout(() => {
+        if (isOn.value) {
+        //关门，向设备发请求
+        } else {
+            //开门，向设备发请求
+        }
+        isLoading.value = false
+        isOn.value = !isOn.value
+        curStatus.value = isOn.value?'锁已开':'锁已关'
+    },2000)
+}
+function getBlue() {
     
+}
+onMounted(() => {
+    getBlue()
+})
 </script>
     
-<style scoped>
-    .box{
+<style>
+    .page{
         display: flex;
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
     }
-    .deviceInfo{
-        margin-bottom: 40px;
-        width: 100vw;
-        height: calc(1/2*100vh);
-        border-radius: 5%;
-        background-color: gainsboro;
-    }
-    .deviceInfo ul li{
-        padding: 100px;
-    }
-    .info{
-        font-size: 70px;
-    }
-    .warningInfo{
-        font-size: 50px;
-        padding: 50px;
-        font-weight: 700;
-        color: #fff;
-    }
-    .btn{
+    .lead{
         width: 100%;
         display: flex;
-        justify-content: space-around;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 50px;
     }
-    .btn li .el-button{
-        width: calc(1/4*80vw);
-        height:  calc(1/4*80vw);
-        font-size: 2.5rem;
-        font-weight: 700;
+    .deviceControlBtn{
+        position: relative;
+        margin: 100px 0 400px 0;
+        width: 60vw;
+        height: 60vw;
         border-radius: 50%;
+        background:url(../assets/img/btn0.png) center/cover no-repeat;
+    }
+    .deviceControlBtn::before{
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        content:'';
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: #1709b1;
+        transition: 1s;
+        animation: var(--slr) 1s linear infinite;
+    }
+    @keyframes controlLoading {
+        0%{
+            opacity: 0.2;
+            transform: scale(1);
+        }
+        50%{
+            opacity: 0.5;
+        }
+        100%{
+            opacity: .2;
+            transform: scale(1.4);
+        }
+        /* 100%{
+            opacity: 0.2;
+            transform: scale(1);
+        } */
+    }
+    .deviceInfo{
+        width: 100%;
+        text-align: center;
+    }
+    .deviceInfo h1{
+        margin-bottom: 30px;
+        font-size: 50px;
+    }
+    .deviceInfo p{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+    .deviceInfo p .el-icon{
+        margin-left: 15px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #1709b1;
+        color: #fff;
     }
 
 </style>
