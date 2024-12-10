@@ -106,6 +106,8 @@ onMounted(() => {
 }
 .backMenu{
   margin: 20px;
+  position: fixed;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -69,6 +69,7 @@ onMounted(() => {
         align-items: center;
     }
     .lead{
+        margin-top: 80px;
         width: 100%;
         display: flex;
         align-items: center;
@@ -108,10 +109,6 @@ onMounted(() => {
             opacity: .2;
             transform: scale(1.4);
         }
-        /* 100%{
-            opacity: 0.2;
-            transform: scale(1);
-        } */
     }
     .deviceInfo{
         width: 100%;
