@@ -36,19 +36,17 @@ const toggleLight = (event) => {
 
 </script>
 
-<style scoped>
+<style>
 .body{
   width:100vw;
   height: 100vh;
   background-color: rgb(40, 40, 40);
-  transition: background-color 0.5s ease; /* 添加过渡效果 */
+  transition: background-color 0.5s ease;
 }
 .textContent{
   height: 300px;
-  color: white;
   font-size: 80px;
   text-align: center;
-  background-color: #111cdf;
 }
 .body.light-on-bg{
          background-color:rgb(40, 40, 40); 
