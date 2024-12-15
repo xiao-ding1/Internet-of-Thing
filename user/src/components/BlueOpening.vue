@@ -40,7 +40,8 @@ function loadingText() {
     },300)
 }
 function changeStatus() {
-    isLoading.value = true
+    if (!isLoading.value) {
+        isLoading.value = true
     loadingText()
     setTimeout(() => {
         if (isOn.value) {
@@ -52,6 +53,7 @@ function changeStatus() {
         isOn.value = !isOn.value
         curStatus.value = isOn.value?'锁已开':'锁已关'
     },2000)
+    }
 }
 function getBlue() {
     
