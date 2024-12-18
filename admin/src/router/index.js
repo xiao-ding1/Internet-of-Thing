@@ -16,6 +16,10 @@ const routes = [
   //   component: Index,
   // },
   {
+    path: "/",
+    redirect: "/code",
+  },
+  {
     path: "/code",
     component: CodePage, // 确保组件路径正确
   },
@@ -32,12 +36,12 @@ const routes = [
     component: SmartClass,
   },
   {
-    path:"/lampControl",
-    component:LampControl
+    path: "/lampControl",
+    component: LampControl,
   },
   {
-    path:"/smartStorage",
-    component:SmartStorage
+    path: "/smartStorage",
+    component: SmartStorage,
   },
   {
     path:"/smartFarm",
@@ -51,11 +55,10 @@ const routes = [
     path:"/account",
     component:AccountManagement
   }
-  
 ];
 
 const router = createRouter({
-  history:createWebHashHistory(), // 使用 HTML5 模式的路由历史记录
+  history: createWebHashHistory(), // 使用 HTML5 模式的路由历史记录
   routes,
 });
 

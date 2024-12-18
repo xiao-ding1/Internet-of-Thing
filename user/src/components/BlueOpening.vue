@@ -40,7 +40,8 @@ function loadingText() {
     },300)
 }
 function changeStatus() {
-    isLoading.value = true
+    if (!isLoading.value) {
+        isLoading.value = true
     loadingText()
     setTimeout(() => {
         if (isOn.value) {
@@ -52,6 +53,7 @@ function changeStatus() {
         isOn.value = !isOn.value
         curStatus.value = isOn.value?'锁已开':'锁已关'
     },2000)
+    }
 }
 function getBlue() {
     
@@ -69,6 +71,7 @@ onMounted(() => {
         align-items: center;
     }
     .lead{
+        margin-top: 80px;
         width: 100%;
         display: flex;
         align-items: center;
@@ -108,10 +111,6 @@ onMounted(() => {
             opacity: .2;
             transform: scale(1.4);
         }
-        /* 100%{
-            opacity: 0.2;
-            transform: scale(1);
-        } */
     }
     .deviceInfo{
         width: 100%;
