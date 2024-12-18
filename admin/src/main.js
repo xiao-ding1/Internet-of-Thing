@@ -6,6 +6,7 @@ import App from "./App.vue";
 import router from "./router";
 import "./assets/font/iconfont.css";
 import "./assets/css/global.css";
+import ElementPlus from "element-plus"; 
 
 // 创建vue实例对象
 const app = createApp(App);
@@ -14,7 +15,7 @@ const app = createApp(App);
 app.use(router);
 
 // 使用element plus
-// app.use(ElementPlus)
+app.use(ElementPlus);
 app.mount("#app");
 
 // 引入所有的icon

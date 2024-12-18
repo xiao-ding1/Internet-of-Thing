@@ -9,6 +9,9 @@ import postcssPxToRem from "postcss-pxtorem";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  optimizeDeps: {
+    include: ["esptool-js"]
+  },
   base: "./",
   plugins: [
     vue(),
