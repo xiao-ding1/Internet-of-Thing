@@ -1,5 +1,12 @@
 <template>
-  <div class="textContent">智慧农场</div>
+  <div class="introBox">
+        <h1>智慧农场</h1>
+    </div>
+    <div class="labels">
+      <label for="tab_top" class="tab">滴灌</label>
+      <label for="tab_middle" class="tab">通风</label>
+      <label for="tab_bottom" class="tab">照明</label>
+    </div>
   <div class="container">
     <input type="radio" name="tabs" id="tab_top" checked>
     <input type="radio" name="tabs" id="tab_middle">
@@ -23,11 +30,6 @@
         <button @click="showMessage('滴灌系统')">点击我</button> 
       </div>
     </div>
-    <div class="labels">
-      <label for="tab_top" class="tab">滴灌</label>
-      <label for="tab_middle" class="tab">通风</label>
-      <label for="tab_bottom" class="tab">照明</label>
-    </div>
   </div>
 </template>
 
@@ -37,34 +39,82 @@ const showMessage = (systemName: string) => {
 };
 </script>
 <style scoped>
-.container{
-  width: 800px;
-  display: flex;
-  position: absolute;
-  left: 55%;
-  top: 55%;
-  transform: translate(-50%,-50%);
-  color: #fff;
-  font-weight: 300;
-  perspective: 1800px;
+    .introBox{
+      margin-bottom: 100px;
+      padding: 20px;
+      width: 100vw;
+      position: relative;
+      background-color: #1709b1;
+      height: 300px;
+      border-radius:0 0 100px 100px;
+      transition: 1s;
+    }
+    h1{
+      margin: 40px 0 20px 0;
+      text-align: center;
+      transition:2s;
+      color: #fff;
+      font-size: 60px;
+      animation: shadow 2s linear forwards;
+    }
+    @keyframes shadow {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+        letter-spacing: 10px;
+        -webkit-box-reflect: below 0 -webkit-linear-gradient(transparent, transparent
+              50%, rgba(255, 255, 255, 0.3));
+      }
+    }
+    .container{
+        width: 800px;
+        height: 800px;
+        display: flex;
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%,-50%);
+        color: #fff;
+        font-weight: 300;
+        perspective: 1800px;
+        animation: containerAppear 1s ease-in-out forwards; 
+}
+@keyframes containerAppear {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 input{
   display: none;
 }
 .labels{
-  height: 800px;
+  background-color: pink;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-top: -20px; 
-  margin-left: 40px; 
+  flex-direction: row;
+  justify-content: space-around;
+  width: 600px;
+  height: 100px;
+  border-radius: 20px;
+  margin: 0 auto;
+  margin-bottom: 20px;
 }
 .tab {
-  height: 220px; 
-  line-height: 200px; 
+  height: 80px;
+  width: 120px; 
+  background-color: #32CD32; 
   text-align: center;
   font-size: 40px; 
   margin-left: 40px;
+  border-radius: 30px;
+  margin: auto;
+  line-height: 80px;
 }
 .tab:nth-child(1){
   background-color: aqua;
@@ -79,32 +129,33 @@ input{
   position: relative;
   flex: 1;
   transform-style: preserve-3d;
-  transition: transform 0.5s ease-in;
+  transition: transform 0.5s ease-in-out;
   height: 800px;
 }
 .tab-content{
-  width: 100%;
-  height: 100%;
+  width: 740px;
+  height: 750px;
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border-radius: 10px;
+  margin-left: 30px;
+  backface-visibility: hidden; 
+  transform-origin: center;
 }
 .tab-content:nth-child(1){
   background-color: rgb(26, 29, 234);
-  transform: rotateX(-90deg) translateZ(400px); 
-  transform-origin: center;
+  transform: rotateX(-90deg) translateZ(380px); 
 }
 .tab-content:nth-child(2){
   background-color: rgb(60,40,190);
-  transform: translateZ(400px);
-  transform-origin: center;
+  transform: rotateX(0deg) translateZ(360px);
 }
 .tab-content:nth-child(3){
 background-color: aqua;
-  transform: rotateX(90deg) translateZ(400px); 
-  transform-origin: center;
+  transform: rotateX(90deg) translateZ(340px); 
 }
 #tab_top:checked ~.cube{
   transform: rotateX(-90deg);

@@ -20,11 +20,11 @@
       :key="item.id"
       class="item-card"
     >
-      <h1>名称：{{ item.name }}</h1>
-      <h2>型号：{{ item.id }}</h2>
-      <h2>种类：{{ item.model }}</h2>
-      <h2>数量: {{ item.number }}</h2>
-      <h2>状态：{{ item.status }}</h2>
+      <h2>名称：{{ item.name }}</h2>
+      <h3>型号：{{ item.id }}</h3>
+      <h3>种类：{{ item.model }}</h3>
+      <h3>数量: {{ item.number }}</h3>
+      <h3>状态：{{ item.status }}</h3>
     </span>
   </div>
 </template>
@@ -157,19 +157,38 @@ input:focus {
  }
 
 h1 {
-  font-size: 28px;
-  margin-bottom: 15px;
-  color: #366397;
-  font-weight: 500;
-  border-bottom: 2px solid #b9d3e8;
-  padding-bottom: 5px;
+  margin: 40px 0 20px 0;
+      text-align: center;
+      transition:2s;
+      color: #75a7dc;
+      font-size: 60px;
+      animation: shadow 2s linear forwards;
+      margin-bottom: 40px;
 }
-
-h2 {
+@keyframes shadow {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+        letter-spacing: 10px;
+        -webkit-box-reflect: below 0 -webkit-linear-gradient(transparent, transparent
+              50%, rgba(255, 255, 255, 0.3));
+      }
+    }
+h2{
+  font-size: 24px;
+  color: #4a76a8;
+  padding-bottom: 10px;
+  margin-left: 5px;
+}
+h3 {
   font-size: 20px;
   margin-bottom: 12px;
   color: #4a76a8;
   font-weight: 400;
+  margin-left: 10px;
+  padding-top: 5px;
 }
 
 .item-card {

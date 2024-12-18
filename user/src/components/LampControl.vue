@@ -1,6 +1,8 @@
 <template>
    <div class="body" :class="{ 'light-on-bg': isOn }">
-    <div class="textContent">智能灯控</div>
+    <div class="introBox">
+        <h1>智能灯控</h1>
+    </div>
     <div class="bulbContain">
     <div class="bulb" :class="{ 'on': isOn }">
       <div id="stave"></div>
@@ -36,18 +38,42 @@ const toggleLight = (event) => {
 
 </script>
 
-<style>
+<style scoped>
 .body{
   width:100vw;
   height: 100vh;
   background-color: rgb(40, 40, 40);
   transition: background-color 0.5s ease;
 }
-.textContent{
-  height: 300px;
-  font-size: 80px;
-  text-align: center;
-}
+.introBox{
+      margin-bottom: 100px;
+      padding: 20px;
+      width: 100vw;
+      position: relative;
+      background-color: #8b8b8b;
+      height: 300px;
+      border-radius:0 0 100px 100px;
+      transition: 1s;
+    }
+    h1{
+      margin: 40px 0 20px 0;
+      text-align: center;
+      transition:2s;
+      color: #fff;
+      font-size: 60px;
+      animation: shadow 2s linear forwards;
+    }
+    @keyframes shadow {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+        letter-spacing: 10px;
+        -webkit-box-reflect: below 0 -webkit-linear-gradient(transparent, transparent
+              50%, rgba(255, 255, 255, 0.3));
+      }
+    }
 .body.light-on-bg{
          background-color:rgb(40, 40, 40); 
       }
@@ -70,8 +96,8 @@ const toggleLight = (event) => {
 }
 
 .bulb.on {
-  background: radial-gradient(yellow 30%, #e4e4e4); 
-  filter: drop-shadow(0 0 100px #eeda82);
+  background: radial-gradient(yellow 50%, #e4e4e4); 
+  filter: drop-shadow(0 0 200px yellow);
 }
 
 #stave {
@@ -167,7 +193,7 @@ polyline {
   box-shadow: -2px 4px 10px -2px #f1f0f0;
 }
 [type=checkbox]:checked +.switch{
-  background-color: rgb(237, 218, 183);
+  background-color:yellow;
 }
 [type=checkbox]:checked + .switch::before{
   margin-left: 155px;
