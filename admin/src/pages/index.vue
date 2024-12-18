@@ -1,27 +1,38 @@
 <template>
-  <el-tabs 
-  type="border-card" 
-  class="custom-tabs" 
-  tabPosition="left"
-  @tab-change="changeTab"
-  v-model="tabValue" 
-  active-text-color="#ffd04b"
-  background-color="#545c64">
-    <el-tab-pane label="感知实验" name="1"><RouterView /></el-tab-pane>
-    <el-tab-pane label="蓝牙开门" name="2"><RouterView /></el-tab-pane>
-    <el-tab-pane label="网络控灯" name="3"><RouterView /></el-tab-pane>
-    <el-tab-pane label="智能门禁" name="4"><RouterView /></el-tab-pane>
-    <el-tab-pane label="智能仓储" name="5"><RouterView /></el-tab-pane>
-    <el-tab-pane label="智能教室" name="6"><RouterView /></el-tab-pane>
-    <el-tab-pane label="智慧农场" name="7"><RouterView /></el-tab-pane>
-  </el-tabs>
+  <div class="container">
+    <Header v-model="isAccount"/>
+    <div class="tabs">
+      <el-tabs 
+      v-if="!isAccount"
+      type="border-card" 
+      class="custom-tabs" 
+      tabPosition="left"
+      @tab-change="changeTab"
+      v-model="tabValue" 
+      active-text-color="#ffd04b"
+      background-color="#545c64">
+        <el-tab-pane label="🚀 感知实验" name="1"><RouterView /></el-tab-pane>
+        <el-tab-pane label="🔵 蓝牙开门" name="2"><RouterView /></el-tab-pane>
+        <el-tab-pane label="💡 网络控灯" name="3"><RouterView /></el-tab-pane>
+        <el-tab-pane label="🚪 智能门禁" name="4"><RouterView /></el-tab-pane>
+        <el-tab-pane label="📦 智能仓储" name="5"><RouterView /></el-tab-pane>
+        <el-tab-pane label="🏫 智能教室" name="6"><RouterView /></el-tab-pane>
+        <el-tab-pane label="🌱 智慧农场" name="7"><RouterView /></el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="acc">
+      <AccountManagement v-if="isAccount" v-model="isAccount"/>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { onMounted,ref } from 'vue';
 import { RouterView, useRouter } from 'vue-router'
+import Header from '@/components/Header.vue'
 const router = useRouter()
 let tabValue = ref("1")
+let isAccount = ref(false);
 onMounted(() => {
   changeTab()
 })
@@ -42,6 +53,9 @@ function changeTab() {
     router.replace('/code')
   }
 }
+function ToogleisAccount(message) {
+  isAccount = message
+}
 </script>
 
 <style>
@@ -57,6 +71,7 @@ function changeTab() {
 }
 .custom-tabs{
   height:100vh;
+  margin:10px;
 }
 .el-tabs__item.is-active{
   background-color: pink;

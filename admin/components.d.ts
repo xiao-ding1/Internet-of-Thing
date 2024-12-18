@@ -7,7 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AccountManagement: typeof import('./src/components/AccountManagement.vue')['default']
     BlueOpening: typeof import('./src/components/BlueOpening.vue')['default']
+    BurnPage2: typeof import('./src/components/BurnPage2.vue')['default']
     CodePage: typeof import('./src/components/CodePage.vue')['default']
     Coding: typeof import('./src/components/Coding.vue')['default']
     CompileOutput: typeof import('./src/components/CompileOutput.vue')['default']
@@ -39,6 +41,7 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     GetDevice: typeof import('./src/components/GetDevice.vue')['default']
+    Header: typeof import('./src/components/Header.vue')['default']
     Home: typeof import('./src/components/Home.vue')['default']
     HomeHeader: typeof import('./src/components/home/HomeHeader.vue')['default']
     HomeMain: typeof import('./src/components/home/HomeMain.vue')['default']
