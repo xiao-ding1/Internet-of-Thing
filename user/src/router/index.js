@@ -7,6 +7,10 @@ import SmartFarm from "@/components/SmartFarm.vue";
 import LampControl from "@/components/LampControl.vue";
 const routes = [
   {
+    path: "/",
+    redirect: "/blue",
+  },
+  {
     path: "/blue",
     component: BlueOpening,
   },
@@ -20,15 +24,15 @@ const routes = [
   },
   {
     path: "/smartFarm",
-    component: SmartFarm
+    component: SmartFarm,
   },
   {
     path: "/smartStorage",
-    component: SmartStorage
+    component: SmartStorage,
   },
   {
     path: "/lampControl",
-    component: LampControl
+    component: LampControl,
   },
 ];
 
