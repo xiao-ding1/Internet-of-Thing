@@ -9,15 +9,11 @@ import SmartStorage from "@/components/SmartStorage.vue";
 import SmartFarm from "@/components/SmartFarm.vue";
 import BurnPage2 from "@/components/BurnPage2.vue";
 import AccountManagement from "@/components/AccountManagement.vue";
+import Login from "@/pages/Login.vue";
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Index,
-  // },
   {
     path: "/",
-    redirect: "/code",
+    component:Login
   },
   {
     path: "/code",
