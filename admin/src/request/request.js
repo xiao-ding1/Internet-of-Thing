@@ -12,43 +12,28 @@ export const request = axios.create({
 
 // 获取 token
 const token = () => {
-  return sessionStorage.getItem("token");
+  try {
+      if (sessionStorage.getItem("token")) {
+          return sessionStorage.getItem("token");
+      } else {
+          return null;
+      }
+  } catch (e) {
+      console.error('获取token出现异常：', e);
+      return null;
+  }
 };
 
-// 请求拦截
+//请求拦截
 request.interceptors.request.use(
   (config) => {
-    const tokenValue = token();    
+    console.log(sessionStorage.getItem('token'));
     // 配置请求头
     config.headers["Content-Type"] = "application/json;charset=UTF-8";
-    if (tokenValue) {
-      config.headers["Authorization"] = tokenValue;
-    }
-
+    config.headers["Authorization"] = token();
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
-);
-
-// 响应拦截
-request.interceptors.response.use(
-  (response) => {
-    const { code } = response.data;
-    if (code && code !== 200) {
-      return Promise.reject(new Error(response.data.message || '业务逻辑错误'));
-    }
-    return response;
-  },
-  (error) => {
-    const { response } = error;
-    if (response) {
-      // 请求已发出，但不在2xx范围内
-      ElMessageBox.alert(response.data.message || '请求错误');
-      return Promise.reject(response.data);
-    } else {
-      ElMessage.warning("网络连接异常, 请稍后再试!");
-    }
   }
 );
