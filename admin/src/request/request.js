@@ -34,27 +34,3 @@ request.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-// 响应拦截
-request.interceptors.response.use(
-  (response) => {
-    // 检查后端的自定义业务状态码
-    const { code } = response.data;
-    if (code && code !== 200) {
-      ElMessageBox.alert(response.data.msg);
-      return Promise.reject(new Error(response.data.msg|| '业务逻辑错误'));
-    }
-    return response;
-  },
-  (error) => {
-    const { response } = error;
-    if (response) {
-      console.log(response)
-      // 请求已发出，但是不在2xx的范围
-      ElMessageBox.alert(response.data.msg);
-      return Promise.reject(response.data);
-    } else {
-      ElMessage.warning("网络连接异常,请稍后再试!")
-    }
-  }
-)
