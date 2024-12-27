@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { ElMessage, ElMessageBox } from "element-plus"; // 引入el 提示框
 // 定义baseURL
 export const baseURL = 'http://113.45.133.116:9999';
 
