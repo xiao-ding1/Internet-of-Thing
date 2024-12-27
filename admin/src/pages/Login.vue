@@ -2,11 +2,11 @@
 <div id="loginbox" v-if="!roleId">
         <div class="background" :style="backgroundStyle" :class="{ fade: isFading }"></div>
         <div id="login">
-            <h3 style="color: #fff">欢迎来到物联网世界</h3>
+            <h3 style="color: #fff">物联网实验平台</h3>
             <form @submit.prevent="handleSubmit" class="form">
-                <input type="text" v-model="username" placeholder="Username" required>
-                <input type="password" v-model="password" placeholder="Password" required>
-                <button type="submit" >Login</button>
+                <input type="text" v-model="username" placeholder="请输入帐号" required>
+                <input type="password" v-model="password" placeholder="请输入密码" required>
+                <button type="submit" >登录</button>
             </form>
         </div>
     </div>
@@ -48,7 +48,7 @@ onMounted(() => {
             currentBackgroundIndex.value = (currentBackgroundIndex.value + 1) % backgrounds.length
             isFading.value = false // 淡入
         }, 1000) // 动画时间与 CSS 动画时间保持一致
-    }, 5000) // 每 5 秒切换一次
+    }, 3000) 
 })
 
 onBeforeUnmount(() => {
@@ -138,6 +138,10 @@ const handleSubmit = async() => {
     border-radius: 10px;
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+h3{
+    font-size: 30px;
+    margin-bottom: 30px;
 }
 
 .form {

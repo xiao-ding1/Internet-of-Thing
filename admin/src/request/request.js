@@ -1,5 +1,7 @@
 import axios from 'axios'
-// 定义baseURL
+import { ElMessage, ElMessageBox } from "element-plus"; // 引入el 提示框
+
+// 定义 baseURL
 export const baseURL = 'http://113.45.133.116:9999';
 
 // 创建 axios 实例
@@ -7,6 +9,8 @@ export const request = axios.create({
   baseURL,
   timeout: 60000, // 设置请求超时
 });
+
+// 获取 token
 const token = () => {
   try {
       if (sessionStorage.getItem("token")) {
