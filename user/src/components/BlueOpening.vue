@@ -5,22 +5,26 @@
             <span>点击按钮开关门</span>
         </div>
         <div class="deviceControlBtn"
+        ref="controlBtn"
          @click="changeStatus"
          :style="{ '--slr': isLoading ? 'controlLoading': ''}"
          ></div>
         <div class="deviceInfo">
             <h1>{{curStatus}}</h1>
-            <p><span>设备信息：xxx</span>
+            <p><span>{{ deviceInfo }}</span>
             <el-icon @click="getBlue"><Refresh /></el-icon></p>
         </div>
     </div>
 </template>
     
 <script lang='ts' setup name='BlueOpening'>
-import { onMounted,  ref } from 'vue'
+import { ref } from 'vue'
 let isOn = ref(true)
+let isConnect = ref(false)
 let isLoading = ref(false)
-let curStatus = ref('锁已开')
+let curStatus = ref('点击按钮蓝牙连接设备')
+let deviceInfo = ref('暂无设备连接')
+let controlBtn = ref()
 function loadingText() {
     let curAction = isOn.value?'正在关锁':'正在开锁'
     curStatus.value = curAction
@@ -40,27 +44,55 @@ function loadingText() {
     },300)
 }
 function changeStatus() {
-    if (!isLoading.value) {
-        isLoading.value = true
-    loadingText()
-    setTimeout(() => {
-        if (isOn.value) {
-        //关门，向设备发请求
-        } else {
-            //开门，向设备发请求
+    if (isConnect.value) {
+        if (!isLoading.value) {
+            isLoading.value = true
+        loadingText()
+        setTimeout(() => {
+            if (isOn.value) {
+            //关门，向设备发请求
+            } else {
+                //开门，向设备发请求
+            }
+            isLoading.value = false
+            isOn.value = !isOn.value
+            curStatus.value = isOn.value?'锁已开':'锁已关'
+        },2000)
         }
-        isLoading.value = false
-        isOn.value = !isOn.value
-        curStatus.value = isOn.value?'锁已开':'锁已关'
-    },2000)
+    } else {
+        getBlue()
     }
 }
-function getBlue() {
-    
+async function getBlue() {
+    if (navigator.bluetooth) {
+        // 支持 Web Bluetooth
+        navigator.bluetooth.requestDevice({
+            acceptAllDevices: true//filter设备
+        })
+        .then(device => {
+            device.gatt.connect().then(server => {
+                 ElMessage({
+                    message: '连接成功',
+                    type: 'success',
+                })
+                controlBtn.value.style.background = 'url(/src/assets/img/btn.png) center/cover no-repeat'
+                isConnect.value = true
+            }).catch(err => {
+                 ElMessage('连接失败')
+            })
+        })
+        .catch(error => {
+            if ((/cancelled/).test(error)) {
+                //用户取消连接
+                 ElMessage('连接失败')
+            } else {
+                curStatus.value = '该浏览器不支持蓝牙操作，请用其他浏览器打开'
+            }
+        })
+    } else {
+        curStatus.value = '该浏览器不支持蓝牙操作，请用其他浏览器打开'
+    }
 }
-onMounted(() => {
-    getBlue()
-})
 </script>
     
 <style>
