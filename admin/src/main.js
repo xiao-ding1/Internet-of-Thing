@@ -4,6 +4,7 @@ import { createApp } from "vue";
 
 import App from "./App.vue";
 import router from "./router";
+import store from "./store";
 import "./assets/font/iconfont.css";
 import "./assets/css/global.css";
 import ElementPlus from "element-plus"; 
@@ -13,6 +14,7 @@ const app = createApp(App);
 
 // 使用router
 app.use(router);
+app.use(store);
 
 // 使用element plus
 app.use(ElementPlus);

@@ -1,11 +1,12 @@
 <template>
    
-    <Index />
+    <Login />
     
 </template>
     
 <script lang='ts' setup name=''>
     import Index from '@/pages/index.vue';  
+    import Login from './pages/Login.vue';
     import { ref } from 'vue'
     const isLoggedIn = ref(false)
 </script>
