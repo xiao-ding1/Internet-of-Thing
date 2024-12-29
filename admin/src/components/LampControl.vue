@@ -1,7 +1,7 @@
 <template>
   <Title :text="text" :subtext="subtext" />
   <div>
-    <Loading :loading-message="loadingMessage" v-if="loading"/>
+    <Loading :loadingMessage="loadingMessage" v-if="loading"/>
     <img v-if="!isClicked" ref="lampImg" src="../assets/img/不亮灯泡.png" class="lamp1"
          :style="{animation: 'bounce 3s infinite alternate'}" @click="toggleImage" />
     <img v-else :style="newImageStyle" src="../assets/img/亮灯泡.png" class="lamp1" @click="toggleImage" />
@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 import Title from './Title.vue';
 import { ref, onBeforeUpdate, onMounted } from 'vue';
@@ -59,7 +59,7 @@ const toggleImage = async () => {
     }
   } catch (error) {
     console.error('请求失败:', error)
-    ElMessage.error(isClicked.value? '关灯操作失败，请稍后再试' : '开灯操作失败，请稍后再试')
+    ElMessage.error(isClicked.value? `${error.message}关灯操作失败，请稍后再试` : `${error.message}开灯操作失败，请稍后再试`)
   } finally {
     loading.value = false
   }
