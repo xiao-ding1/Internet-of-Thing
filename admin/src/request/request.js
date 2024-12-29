@@ -37,3 +37,29 @@ request.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+// 响应拦截
+request.interceptors.response.use(
+  (response) => {
+    // 检查接口返回的 code 是否为 200
+    const { code, msg } = response.data;
+    if (code !== 200) {
+      // 如果 code 不是 200，弹出提示框显示错误信息
+      ElMessageBox.alert(msg || '请求失败', '请求失败', {
+        type: 'error',
+        confirmButtonText: '确定',
+      });
+    }
+
+    // 如果是 200，返回数据
+    return response;
+  },
+  (error) => {
+    // 处理其他错误，如网络错误、服务器错误等
+    ElMessageBox.alert('请求失败，请检查网络或稍后重试', '网络错误', {
+      type: 'error',
+      confirmButtonText: '确定',
+    });
+
+    return Promise.reject(error); // 返回错误
+  }
+);
