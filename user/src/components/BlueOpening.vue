@@ -68,18 +68,23 @@ async function getBlue() {
         // 支持 Web Bluetooth
         navigator.bluetooth.requestDevice({
             acceptAllDevices: true//filter设备
-        })
-        .then(device => {
+            // filters: [{ namePrefix: "M" }],
+        }).then(device => {
+            console.log('device', device);
             device.gatt.connect().then(server => {
-                 ElMessage({
+                console.log('server', server);
+                console.log('服务列表',server.getPrimaryService(server.getPrimaryServices()[0].uuid));
+                ElMessage({
                     message: '连接成功',
                     type: 'success',
                 })
                 controlBtn.value.style.background = 'url(/src/assets/img/btn.png) center/cover no-repeat'
                 isConnect.value = true
-            }).catch(err => {
-                 ElMessage('连接失败')
-            })
+            },
+                err => {
+                console.log('连接失败',err);
+            }
+            )
         })
         .catch(error => {
             if ((/cancelled/).test(error)) {

@@ -20,6 +20,7 @@
     "monaco-editor": "^0.52.0",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
+    "vuex": "^4.1.0",
     "web-serial-polyfill": "^1.0.15"
   },
   "devDependencies": {

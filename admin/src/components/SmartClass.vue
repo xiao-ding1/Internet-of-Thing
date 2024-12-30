@@ -49,8 +49,8 @@
                 <div ref="peopleCharts" class="peopleCharts"></div>
             </div>
             <div class="device">
-                <DeviceCard/>
-                <DeviceCard/>
+                <DeviceCard device="fan"/>
+                <DeviceCard device="curtain"/>
             </div>
         </el-aside>
     </el-container>
