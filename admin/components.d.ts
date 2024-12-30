@@ -43,6 +43,7 @@ declare module 'vue' {
     Header: typeof import('./src/components/Header.vue')['default']
     LampControl: typeof import('./src/components/LampControl.vue')['default']
     Loading: typeof import('./src/components/Loading.vue')['default']
+    Register: typeof import('./src/components/Register.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SmartClass: typeof import('./src/components/SmartClass.vue')['default']

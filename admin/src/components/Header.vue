@@ -13,12 +13,15 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { defineProps, defineEmits, computed, ref } from 'vue';
+import { defineProps, defineEmits, computed, ref,onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 const router = useRouter();
 
+onMounted(() => {
+    goToAccountManagement();
+})
 const roleId = computed(() => store.state.roleId);
 // 接收 v-model 的值 (父组件传递的 a)
 const props = defineProps({
@@ -93,7 +96,7 @@ const iconUrl = 'https://fakeimg.pl/40x40/'; // 后续替换为正式 URL
 .dropdown {
   position: absolute;
   top: 50px;
-  right: 0;
+  right: -15px;
   background-color: #fff;
   border: 1px solid #ddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
