@@ -49,18 +49,19 @@
                 <div ref="peopleCharts" class="peopleCharts"></div>
             </div>
             <div class="device">
-                <DeviceCard device="fan"/>
-                <DeviceCard device="curtain"/>
+                <DeviceCard :isOpening="fanStatus==undefined?false:fanStatus" :num="temNum==undefined?0:temNum" device="fan"/>
+                <DeviceCard :isOpening="curtainStatus==undefined?false:curtainStatus" :num="rayNum==undefined?0:rayNum" device="curtain"/>
             </div>
         </el-aside>
     </el-container>
 </template>
     
-<script lang='ts' setup name=''>
+<script setup name=''>
 import {onMounted, reactive, ref,computed} from 'vue'
 import Title from './Title.vue';
 const text = '智    能    教    室'
 const subtext = '用科技帮助学生实现高效学习'
+
 //对于表格
 let searchKey = ref('')
 let tableData = ref([
@@ -69,7 +70,6 @@ let tableData = ref([
         phone: '电话1',
         status:'已签到'
     }
-    
 ])
 //搜索内容过滤的最后呈现
 let showData = computed(() => {
@@ -143,12 +143,7 @@ onMounted(() => {
 })
 
 //对于风扇和空调设备
-import DeviceCard from './DeviceCard.vue'
-
-
-
-
-
+let { fanStatus, curtainStatus,rayNum,temNum } = defineProps(['fanStatus', 'curtainStatus','rayNum','temNum'])
 
 </script>
     

@@ -40,9 +40,11 @@
     
 <script setup name='DeviceCard'>
 import { ElInputNumber } from 'element-plus'
-import { ref, h, onMounted, computed} from 'vue'
+import { ref, h, onMounted, computed,watch} from 'vue'
 import { setFanFlag, setCurtainFlag, controlFan, controlCurtain } from '@/request/modules/class'
-let { device } = defineProps(['device'])
+let { device} = defineProps(['device'])
+// let openStatus = ref(isOpening)
+let isOpening = ref(false)
 let deviceInfo = ref({
     deviceName: '',
     currentflag: 0,//阙值
@@ -57,9 +59,11 @@ let deviceIcon= computed(() => {
         return isOpening.value?'icon-curtain_off':'icon-chuanglian'
     }
 })
-let isOpening = ref(false)
 let isLoading = ref(false)
 let isAuto = ref(true)
+// watch(isOpening, (newValue,_) => {
+//     openStatus.value = newValue
+// })
 function Control() {
     isLoading.value = true
     if (isAuto.value) {
