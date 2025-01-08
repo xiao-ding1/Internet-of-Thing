@@ -9,7 +9,11 @@
 
     <!-- 账号管理表格 -->
     <el-table :data="accounts" border style="width: 100%" class="account-table">
-      <el-table-column prop="username" label="账号" width="150" />
+       <!-- 用户账号列 -->
+      <el-table-column prop="username" label="用户账号" width="150" />
+      
+      <!-- 管理员账号列 -->
+      <el-table-column prop="adminname" label="管理员账号" width="150" />
       <!-- <el-table-column prop="password" label="密码" width="150">
         <template #default="scope">
           <span
@@ -140,19 +144,20 @@ const getUserInfo = async() => {
   }
 }
 function processAccountData(data: any[]) {
-  const accountMap = new Map<string, any>(); // 使用 Map 来去重并合并数据
+  const accountMap = new Map<string, any>(); // 使用 Map 去重并合并数据
 
   data.forEach(item => {
-    if (accountMap.has(item.username)) {
+    const key = `${item.username}-${item.adminname}`; // 唯一键
+    if (accountMap.has(key)) {
       // 如果帐号已经存在，合并绑定的设备
-      accountMap.get(item.username).devices.push(item.deviceId);
+      accountMap.get(key).devices.push(item.deviceId);
     } else {
       // 否则，创建新的帐号记录
-      accountMap.set(item.username, {
-        username: item.username,
-        // password: '********', // 默认密码显示为******，可根据需要替换
+      accountMap.set(key, {
+        username: item.username, // 用户账号
+        adminname: item.adminName, // 管理员账号
         devices: [item.deviceId], // 绑定设备
-        showPassword: false
+        showPassword: false,
       });
     }
   });
@@ -160,6 +165,7 @@ function processAccountData(data: any[]) {
   // 将 Map 转换为数组并返回
   return Array.from(accountMap.values());
 }
+
 const devicesInfo = ref([])
 const getBoardId = async() => {
   try {
