@@ -41,11 +41,11 @@
   </div>
   <div class="dialog" v-if="dialogVisible">
     <div class="dialog-content">
-      <h3>添加帐号</h3>
+      <h3 class="dialog-title">添加账号</h3>
       <!-- 设备绑定选择 -->
       <div class="form-item">
         <label for="device-select">设备绑定:</label>
-        <select id="device-select" v-model="addForm.boardId">
+        <select id="device-select" v-model="addForm.boardId" class="form-input">
           <option v-for="device in devices" :key="device" :value="device">
             {{ device }}
           </option>
@@ -60,6 +60,7 @@
           type="text"
           v-model="addForm.username"
           placeholder="请输入用户帐号"
+          class="form-input"
         />
       </div>
 
@@ -70,7 +71,8 @@
           id="user-password"
           type="password"
           v-model="addForm.userPassword"
-          placeholder="请输入用户密码"
+          placeholder="留空默认为'123456'"
+          class="form-input"
         />
       </div>
 
@@ -82,6 +84,7 @@
           type="text"
           v-model="addForm.adminName"
           placeholder="请输入管理员帐号"
+          class="form-input"
         />
       </div>
 
@@ -92,14 +95,15 @@
           id="admin-password"
           type="password"
           v-model="addForm.adminPassword"
-          placeholder="请输入管理员密码"
+          placeholder="留空默认为'123456'"
+          class="form-input"
         />
       </div>
 
       <!-- 操作按钮 -->
       <div class="dialog-actions">
-        <button @click="cancelAddAccount">取消</button>
-        <button @click="confirmAddAccount">确认</button>
+        <button class="btn cancel-btn" @click="cancelAddAccount">取消</button>
+        <button class="btn confirm-btn" @click="confirmAddAccount">确认</button>
       </div>
     </div>
   </div>
@@ -195,13 +199,13 @@ const emit = defineEmits(['update:modelValue']);
 
 // 当前账号列表
 const accounts = ref([
-  { username: 'user1', password: 'password1', devices: ['Device A', 'Device B'] },
-  { username: 'user2', password: 'password2', devices: ['Device C'] },
+  // { username: 'user1', password: 'password1', devices: ['Device A', 'Device B'] },
+  // { username: 'user2', password: 'password2', devices: ['Device C'] },
 ]);
 
 function ResetPassword(account: any) {
   let defaultpass = '123456'; // 设置默认密码
-  editForm.value = { ...account, devices: account.devices.join(', ') }; // 填充表单数据
+  console.log('reset')
 
   // 调用重置密码接口
   api.resetpassword(account.username, defaultpass)
@@ -342,24 +346,30 @@ h1 {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px); /* 添加模糊背景效果 */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10;
+  animation: fadeIn 0.3s ease-out; /* 淡入动画 */
 }
 
 .dialog-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  width: 400px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 420px;
+  text-align: left;
+  animation: slideIn 0.3s ease-out; /* 滑入动画 */
+}
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333333;
   text-align: center;
-}
-
-.dialog-content {
-  display: flex;
-  flex-direction: column;
 }
 
 .form-item {
@@ -369,38 +379,80 @@ h1 {
 .form-item label {
   display: block;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: #666666;
 }
 
-.form-item input,
-.form-item select {
+.form-input,
+.form-select {
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  font-size: 14px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  transition: border-color 0.3s ease;
+}
+
+
+.form-input:focus {
+  border-color: #4caf50;
+  outline: none;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
 }
 
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 20px;
 }
 
-.dialog-actions button {
-  padding: 8px 15px;
+.btn {
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
+  font-size: 14px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.dialog-actions button:first-child {
+.cancel-btn {
   background-color: #f5f5f5;
-  color: #333;
+  color: #333333;
 }
 
-.dialog-actions button:last-child {
-  background-color: #007bff;
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.confirm-btn {
+  background-color: #4caf50;
   color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #43a047;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 </style>

@@ -2,68 +2,70 @@
 <template>
   <div class="header">
     <div class="title">物联网实验</div>
-    <div class="icon" @mouseenter="showDropdown" @mouseleave="hideDropdown" @click="goToAccountManagement">
-      <img :src="iconUrl" alt="个人主页" />
-      <div v-if="dropdownVisible" class="dropdown">
-        <button @click="logout">退出登录</button>
-      </div>
+    <div 
+      class="icon-container"
+      @mouseenter="showDropdown"
+      @mouseleave="scheduleHideDropdown"
+    >
+      <img :src="iconUrl" alt="个人主页" class="user-icon" />
+      <transition name="fade">
+        <div 
+          v-if="dropdownVisible" 
+          class="dropdown"
+          @mouseenter="cancelHideDropdown"
+          @mouseleave="scheduleHideDropdown"
+        >
+          <button @click="logout">退出登录</button>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
+
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { defineProps, defineEmits, computed, ref,onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 const router = useRouter();
 
-onMounted(() => {
-    goToAccountManagement();
-})
-const roleId = computed(() => store.state.roleId);
-// 接收 v-model 的值 (父组件传递的 a)
-const props = defineProps({
-  isAccount: {
-    type: Boolean,
-    required: true,
-  },
-});
-
-// 发射更新事件
-const emit = defineEmits(['update:modelValue']);
-
-// 控制下拉菜单的显示
 const dropdownVisible = ref(false);
+let hideTimer: ReturnType<typeof setTimeout> | null = null;
 
 // 显示下拉菜单
 function showDropdown() {
   dropdownVisible.value = true;
 }
 
-// 隐藏下拉菜单
-function hideDropdown() {
-  dropdownVisible.value = false;
+// 延迟隐藏下拉菜单
+function scheduleHideDropdown() {
+  hideTimer = setTimeout(() => {
+    dropdownVisible.value = false;
+    hideTimer = null;
+  }, 200); // 延时 300 毫秒
 }
 
-// 跳转到账号管理页面
-function goToAccountManagement() {
-  if (roleId.value == 1) {
-    emit('update:modelValue', !props.isAccount);
+// 取消隐藏下拉菜单
+function cancelHideDropdown() {
+  if (hideTimer) {
+    clearTimeout(hideTimer);
+    hideTimer = null;
   }
 }
 
 // 退出登录
 function logout() {
   store.commit('setLoginInfo', { username: '', token: '', roleId: '' });
-  sessionStorage.removeItem('token'); // 移除存储的 token
-  router.push('/'); // 跳转到登录页面
+  sessionStorage.removeItem('token');
+  router.push('/');
 }
 
-// 头像临时 URL
-const iconUrl = 'https://fakeimg.pl/40x40/'; // 后续替换为正式 URL
+// 替代头像 URL
+const iconUrl = 'https://fakeimg.pl/40x40/';
 </script>
+
 
 <style scoped>
 .header {
@@ -82,11 +84,11 @@ const iconUrl = 'https://fakeimg.pl/40x40/'; // 后续替换为正式 URL
   font-weight: bold;
 }
 
-.icon {
+.icon-container {
   position: relative;
 }
 
-.icon img {
+.user-icon {
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -95,12 +97,12 @@ const iconUrl = 'https://fakeimg.pl/40x40/'; // 后续替换为正式 URL
 
 .dropdown {
   position: absolute;
-  top: 50px;
+  top: 60px;
   right: -15px;
   background-color: #fff;
   border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
   padding: 10px;
   z-index: 10;
 }
@@ -118,4 +120,14 @@ const iconUrl = 'https://fakeimg.pl/40x40/'; // 后续替换为正式 URL
 .dropdown button:hover {
   background-color: #e45656;
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
 </style>
