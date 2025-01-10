@@ -43,59 +43,99 @@ function loadingText() {
         }
     },300)
 }
-function changeStatus() {
-    if (isConnect.value) {
-        if (!isLoading.value) {
-            isLoading.value = true
-        loadingText()
-        setTimeout(() => {
-            if (isOn.value) {
-            //关门，向设备发请求
-            } else {
-                //开门，向设备发请求
+async function getBlue() {
+    const bluetooth = window.navigator.bluetooth
+    try {
+        const isSupport = await bluetooth.getAvailability()
+        if (isSupport) {
+            const bluetoothDevice = await bluetooth.requestDevice({
+                filters: [
+                {
+                    services: ['uuid/opening_service'],
+                }
+                ]
+            })
+            bluetoothDevice.addEventListener('gattserverdisconnected', e => {
+                isConnect.value = false
+                ElMessage("蓝牙断开")
+                deviceInfo.value = "暂无设备连接"
+            });
+            const server = bluetoothDevice.gatt
+            if (!server.connected) {
+                await server.connect()
             }
-            isLoading.value = false
-            isOn.value = !isOn.value
-            curStatus.value = isOn.value?'锁已开':'锁已关'
-        },2000)
+            // 获取服务
+            const openingService = await server.getPrimaryService('opening_service')
+            // 获取舵机状态的特征值对象
+            const openingStatusCharacteristic = await openingService.getCharacteristic('battery_level');
+            // 读取状态
+            const status = await openingStatusCharacteristic.readValue()
+            // isOn.value = Boolean(status.getUint16)
+            //倾听状态变更
+            openingStatusCharacteristic.startNotifications().then(() => {
+                openingStatusCharacteristic.addEventListener('characteristicvaluechanged', e => {
+                    console.log(e)
+                    //修改isOn值
+                });
+            }).catch(error => {
+                console.error('Error starting notifications:', error);
+            })
+            isConnect.value = true
+            ElMessage({
+                type: "success",
+                message:"连接成功"
+            })
+            deviceInfo.value = "设备连接中"
+            return openingStatusCharacteristic
+        } else {
+            throw new Error("this browser is not supported")
         }
-    } else {
-        getBlue()
+    } catch (error) {
+        if ((/cancelled/).test(error)) {
+            //用户取消连接
+            ElMessage('连接失败')
+        } else if ((/not supported/).test(error)) {
+            ElMessage('连接失败，该浏览器不支持蓝牙操作，请用其他浏览器打开')
+            curStatus.value = '该浏览器不支持蓝牙操作，请用其他浏览器打开'
+        } else {
+            ElMessage("失败信息：",error)
+        }
+        isConnect.value = false
     }
 }
-async function getBlue() {
-    if (navigator.bluetooth) {
-        // 支持 Web Bluetooth
-        navigator.bluetooth.requestDevice({
-            acceptAllDevices: true//filter设备
-            // filters: [{ namePrefix: "M" }],
-        }).then(device => {
-            console.log('device', device);
-            device.gatt.connect().then(server => {
-                console.log('server', server);
-                console.log('服务列表',server.getPrimaryService(server.getPrimaryServices()[0].uuid));
-                ElMessage({
-                    message: '连接成功',
-                    type: 'success',
-                })
-                controlBtn.value.style.background = 'url(/src/assets/img/btn.png) center/cover no-repeat'
-                isConnect.value = true
-            },
-                err => {
-                console.log('连接失败',err);
-            }
-            )
-        })
-        .catch(error => {
-            if ((/cancelled/).test(error)) {
-                //用户取消连接
-                 ElMessage('连接失败')
-            } else {
-                curStatus.value = '该浏览器不支持蓝牙操作，请用其他浏览器打开'
-            }
-        })
+let activeDeviceC = ref()
+async function changeStatus() {
+    if (!isConnect.value) {
+        activeDeviceC.value = getBlue()
     } else {
-        curStatus.value = '该浏览器不支持蓝牙操作，请用其他浏览器打开'
+        if (activeDeviceC.value) {
+            //写入值
+            if (!isLoading.value) {
+                try {
+                isLoading.value = true
+                loadingText()
+                if (isOn.value) {
+                    //写入关门请求
+                    await activeDeviceC.value.writeValue("关门")
+                } else {
+                    //写入开门请求
+                    await activeDeviceC.value.writeValue("开门")
+                }
+                isOn.value = !isOn.value
+                isLoading.value = false
+                curStatus.value = isOn.value?'锁已开':'锁已关'
+                } catch (err) {
+                    ElMessage({
+                        type: "error",
+                        message:`修改状态失败，错误信息：${err}`,
+                    })
+                    isLoading.value = false
+                }
+            }
+        } else {
+            ElMessage("不存在特征值对象，请重新连接")
+            isConnect.value = false
+        }
     }
 }
 </script>
