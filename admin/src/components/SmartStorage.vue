@@ -174,8 +174,16 @@ const fetchData = async () => {
     }
 }
 onMounted( async () => {
+  loading.value=false
+  try{
   tableData.value = await fetchData()
-  templeData.value = [...tableData.value]
+  templeData.value = [...tableData.value]}
+  catch (error) {
+    console.error('加载数据失败')
+  }
+  finally {
+  loading.value=true
+  }
 })
 //二级查询的选项生成
 watch( tableData, () => {
