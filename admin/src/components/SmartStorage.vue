@@ -1,5 +1,6 @@
 <template>
   <Title :text="text" :subtext="subtext"/>
+  <Loading :loadingMessage="loadingMessage" v-if="loading"/>
   <div style="margin-bottom: 20px;">
   <el-button type="primary" @click="openDialog">商品信息录入</el-button>
   
@@ -61,6 +62,8 @@
 import { ref, watch, onMounted } from 'vue';
 import Title from './Title.vue';
 import { getinfo,getininfo,sendinfo,getcount } from '@/request/modules/storage';
+import Loading from './Loading.vue';
+const loading = ref(false)//加载状态
 // 对话框是否可见
 const dialogVisible = ref(false)
 // 新商品信息对象
@@ -124,9 +127,7 @@ const resetNewProduct = () => {
 }
 // 查询库存，一级查询入口，根据不同查询类型处理
 const queryStock = () => {
-  console.log(`执行查询: ${queryType.value}`)
   if (queryType.value === 'quantity') {
-    // 当选择查询数量时，准备二级查询相关数据等（这里先简单打印示意）
     console.log('准备进行二级查询，选择商品种类后查询对应数量')
   } else if (queryType.value === 'in') {
     tableData.value = templeData.value.filter( item => item.status === '未出库')
@@ -141,7 +142,7 @@ const queryStock = () => {
 // 二级查询库存，根据选择的商品种类查询对应数量
 const secondQueryStock = async () => {
   console.log(`执行二级查询，查询商品 ${secondQueryType.value} 的数量`)
-  // 在这里添加具体的根据商品种类查询数量的逻辑，例如遍历tableData查找对应商品并统计数量等
+  loading.value = true
   try {
        const res = await getcount()
        console.log(res.data.data)
@@ -154,6 +155,9 @@ const secondQueryStock = async () => {
   }
   catch (error) {
     console.log('查询失败:',error)
+  }
+  finally{
+    loading.value = false
   }
 }
 
@@ -173,7 +177,7 @@ onMounted( async () => {
   tableData.value = await fetchData()
   templeData.value = [...tableData.value]
 })
-//提取商品名称列表，用于二级查询的选项生成
+//二级查询的选项生成
 watch( tableData, () => {
               const namesSet = new Set()
               tableData.value.forEach(item => {
