@@ -27,10 +27,10 @@
 </template>
 
 <script setup>
-import {ws_num,ws_switch} from '../request/ws'
 import { onMounted,ref } from 'vue';
 import { RouterView, useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
+
 const router = useRouter()
 let tabValue = ref("1")
 let isAccount = ref(false);
@@ -44,32 +44,32 @@ let classDeviceNum = ref({
 })
 onMounted(() => {
   changeTab()
-  ws_switch.onopen = () => {
-      console.log('硬件开关的ws连接成功');
-  }
-  ws_switch.onmessage = (e) => {
-      console.log('硬件开关我收到信息了');
-      let data = JSON.parse(e.data)
-      console.log(data)
-      if (data.type == 2) {
-        classDeviceStatus.value.curtainStatus = data.status
-      } else if (data.type == 3) {
-        classDeviceStatus.value.fanStatus = data.status
-      }
-  }
-  ws_num.onopen = () => {
-      console.log('传感器信息的ws连接成功');
-  }
-  ws_num.onmessage = (e) => {
-      console.log('传感器我收到信息了');
-      let data = JSON.parse(e.data)
-      console.log(data)
-      if (data.type == 1) {
-        classDeviceNum.value.rayNum = data.value
-      } else if (data.type == 2) {
-        classDeviceNum.value.temNum = data.value
-      }
-  }
+  // ws_switch.onopen = () => {
+  //     console.log('硬件开关的ws连接成功');
+  // }
+  // ws_switch.onmessage = (e) => {
+  //     console.log('硬件开关我收到信息了');
+  //     let data = JSON.parse(e.data)
+  //     console.log(data)
+  //     if (data.type == 2) {
+  //       classDeviceStatus.value.curtainStatus = data.status
+  //     } else if (data.type == 3) {
+  //       classDeviceStatus.value.fanStatus = data.status
+  //     }
+  // }
+  // ws_num.onopen = () => {
+  //     console.log('传感器信息的ws连接成功');
+  // }
+  // ws_num.onmessage = (e) => {
+  //     console.log('传感器我收到信息了');
+  //     let data = JSON.parse(e.data)
+  //     console.log(data)
+  //     if (data.type == 1) {
+  //       classDeviceNum.value.rayNum = data.value
+  //     } else if (data.type == 2) {
+  //       classDeviceNum.value.temNum = data.value
+  //     }
+  // }
 })
 function changeTab() {
   if (tabValue.value == '2') {

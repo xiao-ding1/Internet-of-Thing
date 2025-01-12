@@ -18,7 +18,7 @@
 </template>
     
 <script lang='ts' setup name='BlueOpening'>
-import { ref } from 'vue'
+import { onBeforeMount, ref,watch } from 'vue'
 let isOn = ref(true)
 let isConnect = ref(false)
 let isLoading = ref(false)
@@ -138,6 +138,19 @@ async function changeStatus() {
         }
     }
 }
+const socket_blu = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/F?Authorization=${sessionStorage.getItem("token")}`)
+watch([isConnect.value, isOn.value], ([newIsConnect, newIsOn], _) => {
+    if (!newIsConnect) {
+        socket_blu.send("not connect")
+    } else if (newIsOn) {
+        socket_blu.send("opened")
+    } else {
+        socket_blu.send("closed")
+    }
+})
+onBeforeMount(() => {
+    socket_blu.close()
+})
 </script>
     
 <style>

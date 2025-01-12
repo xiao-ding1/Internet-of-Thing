@@ -12,29 +12,27 @@
         </div>
         <div class="lockBox">
             <div class="lock" :style="lockAniStyle"></div>
-            <div class="lockStatus" v-if="isConnect">{{ status }}</div>
+            <div class="lockStatus" v-if="isConnect">{{ statusInfo }}</div>
         </div>
     </div>
 </template>
     
-<script lang='ts' setup name='BlueOpening'>
+<script setup name='BlueOpening'>
 import Title from './Title.vue';
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 //标题
 const subtext = "智联门禁 实时监测"
 const text = '蓝    牙    开    门'
 //门锁
 let isLock = ref(false)
-let lockAniStyle = ref({})
-let status = ref('门锁已关闭')
-//蓝牙匹配
+let lockAniStyle = ref({
+    '--lock-color':'#ccc',
+    '--lock-style': 'lockClose',
+    '--ring-style1': 'lockDown',
+    '--ring-style2': 'ringClose',
+})
+let statusInfo = ref('门锁已关闭')
 let isConnect = ref(false)
-function getDoorInfo() {
-    //获取单片机蓝牙信息
-    //蓝牙是否匹配isConnect
-    //匹配成功检测开门信息
-    changeLockStatus()
-}
 function changeLockStatus() {
     if (isConnect.value) {
         if (isLock.value) {
@@ -45,7 +43,7 @@ function changeLockStatus() {
                 '--ring-style1': 'lockDown',
                 '--ring-style2': 'ringClose',
             }
-            status.value = '门锁已关闭'
+            statusInfo.value = '门锁已关闭'
         } else {
             //开着
             lockAniStyle.value ={
@@ -53,7 +51,7 @@ function changeLockStatus() {
                 '--ring-style1': 'lockPop',
                 '--ring-style2': 'ringOpen',
             }     
-            status.value = '门锁已打开'
+            statusInfo.value = '门锁已打开'
         }
     } else {
         lockAniStyle.value = {
@@ -63,11 +61,51 @@ function changeLockStatus() {
             '--ring-style2': 'ringClose',
         }
     }
-}
+}   
+let ws_blu
 onMounted(() => {
-    getDoorInfo()
+    ws_blu = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/F?Authorization=${sessionStorage.getItem("token")}`)
+    ws_blu.onopen = function () {
+        // ElMessage({
+        //     type: "success",
+        //     message: "成功连接设备"
+        // })
+        // console.log("成功连接");
+    }
+    ws_blu.onmessage = function (e) {
+        //根据状态修改isConnect和isLock信息
+        const msg = e.data
+        if (msg == "not connect") {
+            isConnect.value = false
+        } else {
+            isConnect.value = true
+            if (msg == "opened") {
+                isLock.value = false
+            } else {
+                isLock.value = true
+            }
+        }
+        changeLockStatus()
+    }
+    ws_blu.onerror = function (e) {
+        // ElMessage({
+        //     type: "error",
+        //     message: "网络错误，请联系管理员查询错误"
+        // })
+    }
+    ws_blu.onclose = function (e) {
+        // if (e.wasClean) {
+        //     ElMessage({
+        //         type: "info",
+        //         message: "连接已断开"
+        //     })
+        // }
+    }
 })
-    
+onBeforeUnmount(() => {
+    ws_blu.close(1000)
+    ws_blu=null
+})
 </script>
     
 <style scoped>
