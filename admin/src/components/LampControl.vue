@@ -22,7 +22,16 @@ const loading = ref(false)//加载状态
 const loadingMessage=ref('')
 const subtext = "智能控灯 由此开始"
 const text = '网    络    控    灯'
-onMounted(() => {})
+onMounted(() => {
+  async () =>{
+    try {
+      await controlLamp(0)
+    }
+    catch (error){
+    console.log(error)            
+    }
+  }
+})
 onBeforeUpdate(() => {
   if (lampImg.value) {
     newImageStyle.value = {
