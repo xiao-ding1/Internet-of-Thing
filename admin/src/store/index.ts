@@ -97,11 +97,31 @@ const lampInfo = {
   }
 }
 
+ const farmInfo = {
+  namespace: true,
+  state: {
+    rayNum: 0,
+    wetNum: 0,
+    temNum: 0
+  },
+  mutations: {
+    setrayNUm: (state,rayNum) => {
+      state.rayNum = rayNum
+    },
+    settemNum: (state,temNum) => {
+      state.temNum = temNum
+    },
+    setwetNum: (state,wetNum) => {
+      state.wetNum = wetNum
+    },
+  }
+ }
 export default createStore({
   modules: {
     loginInfo,
     blueInfo,
     smartOpeningInfo,
     classInfo,
-    lampInfo
+    lampInfo,
+    farmInfo
  }})

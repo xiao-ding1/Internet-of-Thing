@@ -7,7 +7,7 @@
         <span class="text-content" v-show="showTmessage" @click.stop>
           <div class="card1">
             <h2>实时温度</h2>
-            <div class="content">{{ currentTemp }}度</div>
+            <div class="content">{{ temNum }}度</div>
             <i class="iconfont icon-mianxingwendujitubiao"></i>
           </div>
           <div class="slider-demo-block">
@@ -16,16 +16,16 @@
               v-model="minTemp" 
               show-input 
               size="small" 
-              :min="minSliderMin" 
-              :max="minSliderMax" 
+              :min="-20" 
+              :max="100" 
             />
             <div class="slider-label">最高温设置</div>
             <el-slider 
               v-model="maxTemp" 
               show-input 
               size="small" 
-              :min="maxSliderMin" 
-              :max="maxSliderMax" 
+              :min="0" 
+              :max="100" 
             />
             <el-button type="success" round @click="sendTemperatureRequest">确定</el-button>
           </div>
@@ -35,7 +35,7 @@
         <span class="text-content" v-show="showSmessage" @click.stop>
           <div class="card2">
             <h2>实时光照</h2>
-            <div class="content">{{ currentSun }}lx</div>
+            <div class="content">{{ rayNum }}lx</div>
             <el-icon>
               <Sunny class="sun"/>
             </el-icon>
@@ -46,8 +46,8 @@
               v-model="minSun" 
               show-input 
               size="small" 
-              :min="minSunSliderMin" 
-              :max="minSunSliderMax" 
+              :min="0" 
+              :max="50" 
             />
             <el-button type="success" round @click="sendSunRequest">确定</el-button>
             <div class="block">
@@ -65,7 +65,7 @@
         <span class="text-content" v-show="showWmessage" @click.stop>
           <div class="card3">
             <h2>实时湿度</h2>
-            <div class="content">{{ currentWet }}%</div>
+            <div class="content">{{ wetNum }}%</div>
             <el-icon><Pouring class="sun"/></el-icon>
           </div>
           <div class="slider-demo-block">
@@ -74,15 +74,15 @@
               v-model="minWet" 
               show-input 
               size="small" 
-              :min="minWetSliderMin" 
-              :max="minWetSliderMax" 
+              :min="0" 
+              :max="50" 
             />
             <div class="slider-label">最高湿度设置</div>
             <el-slider 
               v-model="maxWet" 
               show-input 
               size="small" 
-              :min="maxWetSliderMin" 
+              :min="50" 
               :max="maxWetSliderMax" 
             />
             <el-button type="success" round @click="sendWetRequest">确定</el-button>
@@ -95,45 +95,24 @@
 
 <script setup >
 import Title from './Title.vue';
-import { ref,defineProps,watch } from 'vue';
+import { ref,computed } from 'vue';
+import {useStore} from 'vuex'
 import { sendTemperature,sendWet,sendSunray,sendCloseTime} from '@/request/modules/farm';
 import Loading from './Loading.vue';
-let {rayNum, temNum, wetNum} = defineProps(['rayNum','temNum','wetNum']);
-let currentTemp = ref(temNum);
+const store = useStore()
+let rayNum = computed(() => store.state.farmInfo.rayNum)
+let temNum = computed(() => store.state.farmInfo.temNum)
+let wetNum = computed(() => store.state.farmInfo.wetNum)
 // 最低温滑块绑定的数据
 const minTemp = ref(0);
 // 最高温滑块绑定的数据
 const maxTemp = ref(30);
-// 最低温滑块的最小值
-const minSliderMin = ref(-20);
-// 最低温滑块的最大值
-const minSliderMax = ref(50);
-// 最高温滑块的最小值
-const maxSliderMin = ref(0);
-// 最高温滑块的最大值
-const maxSliderMax = ref(100);
-// 实时光照数据，
-let currentSun = ref(rayNum);
 // 最暗光线滑块绑定的数据
 const minSun = ref(0);
-// 最暗光线滑块的最小值
-const minSunSliderMin = ref(0);
-// 最暗光线滑块的最大值
-const minSunSliderMax =ref(50);
-// 实时湿度数据
-let currentWet = ref(wetNum);
 // 最低湿度滑块
 const minWet= ref(0);
 // 最高湿度滑块
 const maxWet= ref(100);
-// 最低湿度滑块的最大值
-const minWetSliderMax= ref(50);
-// 最低湿度滑块的最小值
-const minWetSliderMin= ref(0);
-// 最高湿度滑块的最小值
-const maxWetSliderMin= ref(50);
-// 最高湿度滑块的最大值
-const maxWetSliderMax= ref(100);
 // 标题文本
 const text= "智 慧 农 场";
 // 副标题文本
@@ -152,13 +131,13 @@ const loading = ref(false);
 const toggleMessage = (type)=>{
   switch (type) {
     case 'temperature':
-      showTmessage.value =!showTmessage.value;
-      break;
+      showTmessage.value =!showTmessage.value
+      break
     case'sun':
-      showSmessage.value =!showSmessage.value;
+      showSmessage.value =!showSmessage.value
       break;
     case 'wet':
-      showWmessage.value =!showWmessage.value;
+      showWmessage.value =!showWmessage.value
       break
   }
 }
@@ -198,7 +177,7 @@ const sendWetRequest = async()=>{
 const sendSunRequest = async()=>{
   loading.value=true
   try {
-   const res=await sendSunray(minSunSliderMin.value)
+   const res=await sendSunray(minSun.value)
    if (res.data && res.data.msg ==='success') {
     ElMessage.success('已成功设置光线强度')
    }
@@ -241,19 +220,6 @@ const sendTimeRequest = async()=>{
     loading.value = false
   }
 }
-watch(() => temNum, (newValue) => {
-  currentTemp.value = newValue
-}, { immediate: true })
-
-watch(() => rayNum, (newValue) => {
-  currentSun.value = newValue
-}, { immediate: true })
-
-// 使用 watch 来监听 wetNum 的变化并更新 currentWet
-watch(() => wetNum, (newValue) => {
-  currentWet.value = newValue
-}, { immediate: true })
-
 </script>
 
 <style scoped>

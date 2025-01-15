@@ -144,7 +144,13 @@ onMounted(() => {
         store.commit('classInfo/setRayNum',value)
       } else if (type == 2) {
         store.commit('classInfo/setTemNum',value)
-      }    
+      } else if (type == 3) {
+        store.commit('farmInfo/setwetNum',value)
+      }  else if (type == 4) {
+        store.commit('farmInfo/settemNum',value)
+      }  else if (type == 5) {
+        store.commit('farmInfo/setrayNum',value)
+      } 
     }
     ws_sen.onerror = function (e) {
         // ElMessage({
@@ -175,8 +181,10 @@ onMounted(() => {
         store.commit('classInfo/setCurtainStatus',value==0?true:false)
       } else if (type == 3) {
         store.commit('classInfo/setFanStatus',value==1?true:false)
-      }    
+      } else if (type == 1) {
+        store.commit('lampInfo/setLampStatus',value==1?true:false)   
     }
+  }
     ws_switch.onerror = function (e) {
         // ElMessage({
         //     type: "error",
