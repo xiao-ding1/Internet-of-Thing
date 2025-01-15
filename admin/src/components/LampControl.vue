@@ -12,12 +12,13 @@
 <script lang="ts" setup>
 
 import Title from './Title.vue';
-import { ref, onBeforeUpdate, onMounted, watch, defineProps } from 'vue';
+import { ref, onBeforeUpdate, onMounted, watch, computed } from 'vue';
 import { controlLamp } from '@/request/modules/lampControl';
 import Loading from './Loading.vue'
-let { lampDeviceStatus } = defineProps(['lampDeviceStatus'])
+import { useStore } from 'vuex';
 const lampImg = ref(null)
-const isClicked = ref(lampDeviceStatus)//控制灯泡开关状态
+const store = useStore()
+const isClicked = computed(()=>store.state.lampInfo.lampDeviceStatus)//控制灯泡开关状态
 const newImageStyle = ref({})
 const loading = ref(false)//加载状态
 const loadingMessage=ref('')
@@ -31,14 +32,14 @@ const toggleImage = async () => {
       loadingMessage.value='正在关闭灯泡'
       const res = await controlLamp(0)
       if (res && res.data.msg === 'success'){
-      isClicked.value = false//更新灯泡状态为关闭
+      store.commit("lampInfo/setLampStatus",false)//更新灯泡状态为关闭
       ElMessage.success('已关闭灯泡')}
     } else {
       loadingMessage.value='正在开启灯泡'
       // 发送请求来打开灯泡
       const res = await controlLamp(1)
       if (res && res.data.msg === 'success'){
-      isClicked.value = true// 更新灯泡状态为打开
+      store.commit("lampInfo/setLampStatus",true)//更新灯泡状态为关闭
       ElMessage.success('已开启灯泡')}
     }
   } catch (error) {
@@ -48,10 +49,6 @@ const toggleImage = async () => {
     loading.value = false
   }
 }
-watch(() => lampDeviceStatus, 
-  (newValue) => {isClicked.value = newValue},
-  { immediate: true }
-)
 onMounted(
   async () =>{
     try {

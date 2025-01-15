@@ -82,10 +82,23 @@ const loginInfo = {
   }
 }
 
+const lampInfo = {
+  namespaced: true,
+  state: {
+    lampDeviceStatus:false
+  },
+  mutations: {
+    setLampStatus: (state, lampDeviceStatus) => {
+      state.lampDeviceStatus = lampDeviceStatus
+    }
+  }
+}
+
 export default createStore({
   modules: {
     loginInfo,
     blueInfo,
     smartOpeningInfo,
-    classInfo
+    classInfo,
+    lampInfo
  }})
