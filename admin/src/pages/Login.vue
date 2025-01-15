@@ -32,7 +32,8 @@ import bg4 from '@/assets/img/iot4.png'
 // 用户名和密码
 const username = ref('')
 const password = ref('')
-const roleId = computed(() => store.state.roleId);
+const roleId = computed(() => store.state.loginInfo.roleId);
+
 // 背景图片数组)
 const backgrounds = [bg1, bg2, bg3, bg4]
 const currentBackgroundIndex = ref(0)
@@ -68,7 +69,7 @@ const handleSubmit = async() => {
     const token = response.data.data.token;
     sessionStorage.setItem('token',token)
     console.log("loginInfo",roleId,'|',token)
-    store.commit('setLoginInfo',{
+    store.commit('loginInfo/setLoginInfo',{
         username:username.value,
         token:token,
         roleId:role

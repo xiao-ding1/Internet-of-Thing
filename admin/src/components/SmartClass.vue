@@ -46,31 +46,26 @@
         <el-aside width="300px">
             <div class="people">
                 <div class="infoTitle">签到情况</div>
-                <div ref="peopleCharts" class="peopleCharts"></div>
+                 <el-result :icon="isSignIn?'success':'error'" :title="isSignIn?'已签到':'已离开教室'"></el-result>
             </div>
             <div class="device">
-                <DeviceCard :isOpening="fanStatus==undefined?false:fanStatus" :num="temNum==undefined?0:temNum" device="fan"/>
-                <DeviceCard :isOpening="curtainStatus==undefined?false:curtainStatus" :num="rayNum==undefined?0:rayNum" device="curtain"/>
+                <DeviceCard device="fan"/>
+                <DeviceCard device="curtain"/>
             </div>
         </el-aside>
     </el-container>
 </template>
     
 <script setup name=''>
-import {onMounted, reactive, ref,computed} from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex';
 import Title from './Title.vue';
 const text = '智    能    教    室'
 const subtext = '用科技帮助学生实现高效学习'
 
 //对于表格
 let searchKey = ref('')
-let tableData = ref([
-    {
-        name: '学生1',
-        phone: '电话1',
-        status:'已签到'
-    }
-])
+let tableData = ref([])
 //搜索内容过滤的最后呈现
 let showData = computed(() => {
     return tableData.value.filter(ele => {
@@ -87,64 +82,9 @@ let showData = computed(() => {
     })
 })
 
-//图表
-let peopleCharts = ref()
-import * as echarts from 'echarts'
-onMounted(() => {
-    let chart1 = echarts.init(peopleCharts.value)
-    let baseOption = {
-    color: [
-        'rgba(20, 50, 117,.3)',
-        'rgba(20, 50, 117)'
-    ],
-    tooltip: {
-        trigger:'item'
-    },
-    //图例组件，标识哪个颜色是哪个模块的组件
-    legend: {
-        top: '5%',
-        left:'center'
-    },
-    series: [
-        {
-            type: "pie",
-            radius: ["40%", "70%"],//修改内外半径
-            // 初始不显示标签文字
-            label: {
-                show: false ,
-                position:'center'
-            },
-            // 不显示连接线
-            labelLine: { show: false },
-            data: [
-            { value: 50, name: "未签到" },
-            { value: 50, name: "已签到" },
-            ],
-            avoidLabelOverlap: false,
-            itemStyle: {
-                borderRadius: 10,
-                borderColor: "#fff",
-                borderWidth:2
-            },
-            emphasis:{
-                label: {
-                    show: true,
-                    fontSize: 30,
-                    fontWeight:'bold'
-                }
-            }
-        }
-    ]
-}
-    chart1.setOption(baseOption)
-    window.addEventListener('resize', function () {
-        chart1.resize()
-    })
-})
-
-//对于风扇和空调设备
-let { fanStatus, curtainStatus,rayNum,temNum } = defineProps(['fanStatus', 'curtainStatus','rayNum','temNum'])
-
+//对于数据
+const store = useStore()
+let isSignIn = computed(() => store.state.classInfo.isSignIn)
 </script>
     
 <style scoped>

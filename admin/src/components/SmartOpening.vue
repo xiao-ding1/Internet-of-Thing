@@ -2,9 +2,7 @@
     <Title :text="text" :subtext="subText"/>
     <div class="action">
         <div class="filterAction">
-            <el-check-tag :checked="showStatus=='all'?true:false" type="primary" @change="changeAll">全部 {{ tableAllData.length }}</el-check-tag>
-            <el-check-tag :checked="showStatus=='approved'?true:false" type="primary" @change="changeDone">已审批{{ tableAllData.filter(ele=>{return ele.status=='通过'}).length }}</el-check-tag>
-            <el-check-tag :checked="showStatus=='unapproved'?true:false" type="primary" @change="changeUnDone">未审批{{ tableAllData.filter(ele=>{return ele.status=='待审批'}).length }}</el-check-tag>
+            <el-check-tag type="primary" checked>新的待审批信息{{ tableData.filter(ele=>{return ele.status=='待审批'}).length }}</el-check-tag>
         </div>
         <div class="otherAction">
             <el-input
@@ -26,68 +24,25 @@
     :cell-style="{ color: 'black', fontSize: '14px', textAlign: 'center', borderBottom: '0.5px #143275 solid', borderLeft: '0.5px #143275 solid' }"
     >
         <el-table-column type="selection" :selectable="(row)=>row.status=='待审批'"></el-table-column>
-        <el-table-column prop="deviceName" label="门禁名称" fixed="left" />
         <el-table-column prop="userName" label="申请人" />
-        <el-table-column prop="time" label="请求时间"/>
-        <el-table-column label="状态">
-            <template #default="scope">
-                <el-tag :type="scope.row.status=='通过'?'success':'warning'">{{scope.row.status}}</el-tag>
-            </template>
-        </el-table-column>
         <el-table-column label="操作" fixed="right">
             <template #default="scope">
-                <div>
-                    <el-button>编辑</el-button>
-                </div>
+                <el-button @click="passFn">审批通过</el-button>
             </template>
         </el-table-column>
     </el-table>
 </template>
     
 <script lang='ts' setup name='smartOpening'>
-    import { reactive, ref, computed } from 'vue';
-    //进行时间格式化
-    import dayjs from 'dayjs';
+    import {  ref, computed } from 'vue';
     import Title from './Title.vue';
+    import { pass } from '@/request/modules/lock';
+    import { useStore } from 'vuex';
+    const store = useStore()
     const text = '智    能    门    禁'
     const subText = '在此审批用户出行请求'
     //表格信息
-    const tableAllData = reactive([
-        {
-            deviceName: '设备信息',
-            userName: '用户信息',
-            time: dayjs(new Date()).format('YYYY-MM-DD'),
-            status:'通过'
-        }
-    ])
-    let showStatus = ref('all')
-    function changeAll() {
-        //tableData显示全部内容
-        //...
-        showStatus.value = 'all'
-    }
-    function changeDone() {
-        //tableData显示已批阅内容
-        //...
-        showStatus.value = 'approved'
-    }
-    function changeUnDone() {
-        //tableData显示未批阅内容
-        //...
-        showStatus.value = 'unapproved'
-    }
-    let tableData = computed(() => {
-        //对于tab标签内容的过滤
-        return tableAllData.filter(ele => {
-            if (showStatus.value == 'all') {
-                return true
-            } else if (showStatus.value == 'approved') {
-                return ele.status =='通过'
-            } else if (showStatus.value == 'unapproved') {
-                return ele.status =='待审批'
-            }
-        })
-    })
+    const tableData = computed(()=>store.state.smartOpeningInfo.tableInfo)
     //搜索内容
     let searchKey = ref('')
     //搜索内容过滤的最后呈现
@@ -105,6 +60,19 @@
             }
         })
     })
+    //审批通过
+    function passFn() {
+        pass().then((res) => {
+            const { code } = res.data
+            if (code >= 200 && code < 300) {
+                ElMessage({
+                    type: "success",
+                    message:"审批通过"
+                })
+                store.commit('smartOpening/clearTableInfo')
+            }
+        })
+    }
 </script>
     
 <style scoped>

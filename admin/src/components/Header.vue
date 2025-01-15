@@ -57,7 +57,7 @@ function cancelHideDropdown() {
 
 // 退出登录
 function logout() {
-  store.commit('setLoginInfo', { username: '', token: '', roleId: '' });
+  store.commit('loginInfo/setLoginInfo', { username: '', token: '', roleId: '' });
   sessionStorage.removeItem('token');
   router.push('/');
 }

@@ -1,7 +1,5 @@
 <template>
-    <el-card class="" 
-      :class="isOpening ?'active':''" 
-    >
+    <el-card :class="isOpening ?'active':''" >
       <div class="top">
           <div class="deviceIcon" :class="isOpening?'active':''">
             <!-- 设备图标 -->
@@ -10,7 +8,7 @@
           <div>
                 <i class="iconfont icon-mianxingwendujitubiao" v-if="deviceInfo.deviceName==='风扇'"></i>
                 <i class="iconfont icon-guangzhaoqiangdu" v-else></i>
-                {{ deviceInfo.currentNum }}&nbsp;
+                {{ num}}&nbsp;
                 <el-switch
                     v-model="isOpening"
                     :before-change="Control"
@@ -42,28 +40,18 @@
 import { ElInputNumber } from 'element-plus'
 import { ref, h, onMounted, computed,watch} from 'vue'
 import { setFanFlag, setCurtainFlag, controlFan, controlCurtain } from '@/request/modules/class'
+import { useStore } from 'vuex'
+const store = useStore()
 let { device} = defineProps(['device'])
-// let openStatus = ref(isOpening)
-let isOpening = ref(false)
 let deviceInfo = ref({
     deviceName: '',
     currentflag: 0,//阙值
-    currentNum:'0°',//实时数据
     setFlagFn: null,//更新阙值的方法
     controlDeviceFn: null//控制设备的方法
 })
-let deviceIcon= computed(() => {
-    if (device === 'fan') {
-        return isOpening.value?'icon-a-fengliangzhonggaotianchongyes':'icon-songpaifengxitong'
-    } else {
-        return isOpening.value?'icon-curtain_off':'icon-chuanglian'
-    }
-})
+let deviceIcon
 let isLoading = ref(false)
 let isAuto = ref(true)
-// watch(isOpening, (newValue,_) => {
-//     openStatus.value = newValue
-// })
 function Control() {
     isLoading.value = true
     if (isAuto.value) {
@@ -73,23 +61,43 @@ function Control() {
     return new Promise((resolve, reject) => {
         if (isOpening.value) {
             //关闭
-            deviceInfo.value.controlDeviceFn(0).then(() => {
-                ElMessage.success(device === 'fan' ? '风扇已关闭' : '窗帘已卷起')
-                return resolve(true)
-            }).catch(() => {
-                ElMessage.error('操作失败')
-                return reject(false)
+            deviceInfo.value.controlDeviceFn(0).then((res) => {
+                const { code} = res.data
+                if (code >= 200 && code < 300) {
+                    store.commit("classInfo/setFanStatus",false)
+                    // if (device == 'fan') {
+                    //     store.commit("classInfo/setFanStatus",false)
+                    //     ElMessage.success('风扇已关闭')
+                    // } else {
+                    //     store.commit("classInfo/setCurtainStatus",false)
+                    //     ElMessage.success('窗帘已卷起')
+                    // }
+                    if (isOpening.value == false) {
+                        ElMessage.success(device=='fan'?'风扇已关闭':'窗帘已卷起')
+                    }
+                }
             }).finally(() => {
                 isLoading.value = false
             })
         } else {
             //开启
-            deviceInfo.value.controlDeviceFn(1).then(() => {
-                ElMessage.success(device==='fan'?'风扇已打开':'窗帘已放下')
-                return resolve(true)
-            }).catch(() => {
-                ElMessage.error('操作失败')
-                return reject(false)
+            deviceInfo.value.controlDeviceFn(1).then((res) => {
+                const { code} = res.data
+                if (code >= 200 && code < 300) {
+                    store.commit("classInfo/setFanStatus", true)
+                    // if (device == 'fan') {
+                    //     store.commit("classInfo/setFanStatus",false)
+                    //     if (isOpening.value == true) {
+                    //         ElMessage.success('风扇已打开')
+                    //     }
+                    // } else {
+                    //     store.commit("classInfo/setCurtainStatus",false)
+                    //     ElMessage.success('窗帘已放下')
+                    // }
+                    if (isOpening.value == true) {
+                        ElMessage.success(device=='fan'?'风扇已打开':'窗帘已放下')
+                    }
+                }
             }).finally(() => {
                 isLoading.value = false
             })
@@ -140,6 +148,9 @@ function openEdit() {
         })
     })
 }
+//数据
+let num
+let isOpening
 onMounted(() => {
     if (device === 'fan') {
         deviceInfo.value = {
@@ -148,6 +159,11 @@ onMounted(() => {
             setFlagFn: setFanFlag,
             controlDeviceFn:controlFan
         }
+        num = computed(() => store.state.classInfo.temNum+'°')
+        isOpening = computed(() => store.state.classInfo.fanStatus)
+        console.log("fans",isOpening.value);
+        
+        deviceIcon = computed(()=>isOpening.value?'icon-a-fengliangzhonggaotianchongyes':'icon-songpaifengxitong')
     } else {
         deviceInfo.value = {
             ...deviceInfo.value,
@@ -155,6 +171,9 @@ onMounted(() => {
             setFlagFn: setCurtainFlag,
             controlDeviceFn:controlCurtain
         }
+        num = computed(() => store.state.classInfo.rayNum+'lx')
+        isOpening = computed(() => store.state.classInfo.curtainStatus)
+        deviceIcon = computed(()=>isOpening.value?'icon-curtain_off':'icon-chuanglian')
     }
 }) 
 </script>
