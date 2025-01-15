@@ -62,15 +62,14 @@
     })
     //审批通过
     function passFn() {
-        pass().then((res) => {
-            const { code } = res.data
-            if (code >= 200 && code < 300) {
-                ElMessage({
-                    type: "success",
-                    message:"审批通过"
-                })
-                store.commit('smartOpening/clearTableInfo')
-            }
+        pass().then(() => {
+            ElMessage({
+                type: "success",
+                message:"审批通过"
+            })
+            store.commit('smartOpening/clearTableInfo')
+        }).catch(err => {
+            ElMessage.error(`操作失败，错误信息${err}`)
         })
     }
 </script>

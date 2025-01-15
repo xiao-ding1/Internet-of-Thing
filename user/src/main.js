@@ -1,16 +1,19 @@
 // import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import "../assets/font/iconfont.css";
 
 import { createApp } from "vue";
 
 import App from "./App.vue";
 import router from "./router";
+import store from "./store";
 // 创建vue实例对象
 const app = createApp(App);
 
 // 使用router
 app.use(router);
+app.use(store);
 
 // 使用element plus
 // app.use(ElementPlus);

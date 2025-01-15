@@ -1,77 +1,168 @@
 <template>
-    <el-card class="" 
-      :class="isOpening ?'active':''" 
-      @click="Control"
-      :style="{'cursor':isLoading?'not-allowed':'pointer'}"
-    >
+    <el-card :class="{'active':isOpening}">
       <div class="top">
-          <div class="deviceIcon" :class="isOpening?'active':''">
-            <i class="iconfont icon-songpaifengxitong"></i>
+          <div class="deviceIcon" :class="{'active':isOpening}">
+            <!-- 设备图标 -->
+            <i :class="`iconfont ${deviceIcon}`"></i>
           </div>
-          <el-switch
-              v-model="isOpening"
-              @change="Control"
-              inline-prompt
-              active-text="ON"
-              inactive-text="OFF"
-              :loading="isLoading"
-          />
+          <div>
+                <i class="iconfont icon-mianxingwendujitubiao" v-if="deviceInfo.deviceName==='风扇'"></i>
+                <i class="iconfont icon-guangzhaoqiangdu" v-else></i>
+                {{num}}&nbsp;
+                <el-switch
+                    v-model="isOpening"
+                    :before-change="Control"
+                    :loading="isLoading"
+                    active-text="ON"
+                    inactive-text="OFF"
+                    inline-prompt
+                />
+        </div>
       </div>
       <div class="card_body">
-        <div class="deviceName">风扇</div>
+        <div class="deviceName">{{ deviceInfo.deviceName }}</div>
         <div class="deviceInfo" @click.stop="">
-            <div><i class="iconfont icon-mianxingwendujitubiao"></i>20°</div>
-            <!-- <div> -->
-            <div>
-                <el-tooltip placement="bottom" v-if="isAuto">
-                    <template #content>当前阙值为1<br/>超过则自动开启</template>
-                    <el-tag>自动</el-tag>
-                </el-tooltip>
-                <el-tooltip placement="bottom" v-else>
-                    <template #content>当前为手动方式<br/></template>
-                    <el-tag>手动</el-tag>
-                </el-tooltip>
-            </div>
-            <el-tag type="success" @click="changeMode">切换</el-tag>
-            <!-- </div> -->
+            <span>当前阙值为{{ deviceInfo.currentflag }}</span>&nbsp;
+            <el-tooltip placement="bottom" :content="`当前阙值为${deviceInfo.currentflag}，超过阙值则自动开启，点击修改阙值`">
+                <el-button size="small" type="primary" @click="openEdit"><el-icon><Edit /></el-icon></el-button>
+            </el-tooltip>
         </div>
       </div>
     </el-card>
 </template>
     
-<script lang='ts' setup name='DeviceCard'>
-import {ref} from 'vue'
-let isOpening = ref(false)
-let isLoading =ref(false)
+<script setup name='DeviceCard'>
+import { ElInputNumber } from 'element-plus'
+import { ref, h, onMounted, computed} from 'vue'
+import { setFanFlag, setCurtainFlag, controlFan, controlCurtain } from '@/request/modules/class'
+import { useStore } from 'vuex'
+const store = useStore()
+let { device} = defineProps(['device'])
+let deviceInfo = ref({
+    deviceName: '',
+    currentflag: 0,//阙值
+    setFlagFn: null,//更新阙值的方法
+    controlDeviceFn: null//控制设备的方法
+})
+let deviceIcon
+let isLoading = ref(false)
 function Control() {
-    if (!isLoading.value) {
-        //远程控制打开还是关闭
-        isLoading.value = true
+    isLoading.value = true
+    return new Promise((resolve, reject) => {
         if (isOpening.value) {
-        //关闭
-        //发请求
+            //关闭
+            deviceInfo.value.controlDeviceFn(0).then(() => {
+                //测试代码
+                if (device == 'fan') {
+                    store.commit('classInfo/setFanStatus',false)
+                } else {
+                    store.commit('classInfo/setCurtainStatus',false)
+                }
+                //逻辑处理
+                if (isOpening.value == false) {
+                    ElMessage.success(device=='fan'?'风扇已关闭':'窗帘已卷起')
+                } else {
+                    ElMessage.error("操作失败，错误信息：设备未开启")
+                }
+            }).catch((err) => {
+                ElMessage.error(`操作失败，请稍后再试，错误信息${err.message}`)
+            }).finally(() => {
+                isLoading.value = false
+            })
         } else {
-            //打开
-            //发请求
+            //开启
+            deviceInfo.value.controlDeviceFn(1).then((res) => {
+                //测试代码
+                if (device == 'fan') {
+                    store.commit('classInfo/setFanStatus',true)
+                } else {
+                    store.commit('classInfo/setCurtainStatus',true)
+                }
+                //逻辑处理
+                if (isOpening.value == true) {
+                    ElMessage.success(device=='fan'?'风扇已开启':'窗帘已放下')
+                } else {
+                    ElMessage.error("操作失败，错误信息：设备未开启")
+                }
+            }).catch((err) => {
+                ElMessage.error(`操作失败，请稍后再试，错误信息${err.message}`)
+            }).finally(() => {
+                isLoading.value = false
+            })
+        }  
+    })
+}
+function openEdit() {
+    let num = ref(1)
+    // 修改温度阙值，当超过这个值时教室风扇自动开启
+    ElMessageBox({
+        title: '修改温度阙值',
+        message: () =>
+        h(ElInputNumber, {
+            modelValue: num.value,
+            'onUpdate:modelValue': (val) => {
+            num.value = val
+            },
+            min: 1,
+            max: 10,
+            'value-on-clear':1//数字选择器被清空后的值
+        }),
+        showCancelButton:true
+    }).then(() => {
+        deviceInfo.value.setFlagFn(num.value).then(res => {
+            ElMessage({
+                type: 'success',
+                message: `修改温度阙值成功`,
+            })
+            deviceInfo.value.currentflag = num.value
+        }).catch(err => {
+            ElMessage({
+                type: 'success',
+                message: err.message,
+            })
+        })
+    }).catch((action) => {
+       ElMessage({
+        type: 'info',
+        message: `action: ${action}`,
+        })
+    })
+}
+//数据
+let num
+let isOpening
+onMounted(() => {
+    if (device === 'fan') {
+        deviceInfo.value = {
+            ...deviceInfo.value,
+            deviceName: '风扇',
+            setFlagFn: setFanFlag,
+            controlDeviceFn:controlFan
         }
-        isLoading.value = false
-        isOpening.value = !isOpening.value
+        num = computed(() => store.state.classInfo.temNum+'°')
+        isOpening = computed(() => store.state.classInfo.fanStatus)
+        console.log("fans",isOpening.value);
+        
+        deviceIcon = computed(()=>isOpening.value?'icon-a-fengliangzhonggaotianchongyes':'icon-songpaifengxitong')
+    } else {
+        deviceInfo.value = {
+            ...deviceInfo.value,
+            deviceName: '窗帘',
+            setFlagFn: setCurtainFlag,
+            controlDeviceFn:controlCurtain
+        }
+        num = computed(() => store.state.classInfo.rayNum+'lx')
+        isOpening = computed(() => store.state.classInfo.curtainStatus)
+        deviceIcon = computed(()=>isOpening.value?'icon-curtain_off':'icon-chuanglian')
     }
-    isAuto.value =false
-}
-let isAuto = ref(true)
-function changeMode() {
-    isAuto.value = !isAuto.value
-    //改变模式
-}
-    
+}) 
 </script>
     
 <style scoped>
-.el-card.active{
-    background-color: #1709b1;
-    color: #fff;
-}
+    .el-card.active{
+        background-color: #143275;
+        color: #fff;
+    }
     .card_body{
         display: flex;
         flex-direction: column;
@@ -93,11 +184,14 @@ function changeMode() {
         font-size: 30px;
         border-radius: 50%;
         background-color: rgba(84, 112, 198,.2);
-        color: #1709b1;
+        color: #143275;
+    }
+    .deviceIcon i{
+        font-size: inherit;
     }
     .deviceIcon.active{
         background-color: #fff;
-        color: #1709b1;
+        color: #143275;
     }
     .card_body{
         display: flex;
@@ -115,8 +209,17 @@ function changeMode() {
     .card_body .deviceInfo{
         display: flex;
         align-items: center;
+        justify-content: end;
     }
     .deviceInfo>div{
         margin-right: 10px;
+    }
+    .numBtn{
+        display: flex;
+        flex-direction: column;
+    }
+    .numBtn>button{
+       height: 15px;
+       line-height: 12px;
     }
 </style>

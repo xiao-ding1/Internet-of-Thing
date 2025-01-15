@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios from "axios";
 import { ElMessage, ElMessageBox } from "element-plus"; // 引入el 提示框
 // 定义baseURL
-export const baseURL = 'http://113.45.133.116:9999';
+export const baseURL = "http://113.45.133.116:9999";
 
 // 创建 axios 实例
 export const request = axios.create({
@@ -36,7 +36,7 @@ request.interceptors.response.use(
     const { code } = response.data;
     if (code && code !== 200) {
       ElMessageBox.alert(response.data.message);
-      return Promise.reject(new Error(response.data.message || '业务逻辑错误'));
+      return Promise.reject(new Error(response.data.message || "业务逻辑错误"));
     }
     return response;
   },
@@ -47,7 +47,8 @@ request.interceptors.response.use(
       ElMessageBox.alert(response.data.message);
       return Promise.reject(response.data);
     } else {
-      ElMessage.warning("网络连接异常,请稍后再试!")
+      ElMessage.warning("网络连接异常,请稍后再试!");
+      return Promise.reject("网络连接异常");
     }
   }
-)
+);

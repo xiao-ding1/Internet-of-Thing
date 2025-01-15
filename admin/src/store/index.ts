@@ -19,7 +19,10 @@ const blueInfo = {
 const smartOpeningInfo = {
   namespaced:true,
   state: {
-    tableInfo: []
+    tableInfo: [{
+      userName: "小李",
+      status:"待审批"
+    }]
   },
   mutations: {
     //收到信息

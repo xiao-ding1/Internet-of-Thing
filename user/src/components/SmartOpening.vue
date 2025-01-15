@@ -2,32 +2,37 @@
   <div class="pages">
     <div class="introBox">
       <h1>智能门禁</h1>
-      <el-button class="appointBtn">Appointment</el-button>
+      <el-button class="appointBtn" @click="appointFn">Appointment</el-button>
     </div>
     <div class="myAppointment">
       <div class="subText">我的预约</div>
-      <ul>
-        <el-card class="box-card">
+      <ul v-if="appointInfo.length">
+        <li v-for="(item) of appointInfo" :key="item.id"><el-card class="box-card">
           <div slot="header" class="card-header">
-            <el-tag type="success">预约成功</el-tag>
+            <div>{{ item.id }}</div>
+             <el-tag :type="item.status=='审批通过'?'success':'warning'">{{ item.status }}</el-tag>
           </div>
           <ul class="card-content">
-            <li>预约编号：xxx</li>
-            <li>设备名称：xxx</li>
-            <li>设备时间：xxx</li>
+            <li>预约编号：{{item.id}}</li>
+            <li>预约人：{{ item.userName }}</li>
+            <li>设备时间：{{ item.time }}</li>
             <li>
               <el-tag
                 type="warning"
                 style="float: right"
                 effect="dark"
                 @click="showDetail"
-                v-if="isDone"
+                v-if="item.status=='审批通过'"
                 >查询二维码驱动舵机</el-tag
               >
             </li>
           </ul>
-        </el-card>
+        </el-card></li>
       </ul>
+      <div v-else class="notFound">
+        <img src="../assets/img/订单.png" alt="">
+        <h2 style="color: black;">暂无预约</h2>
+      </div>
     </div>
     <div class="cover" v-if="isShow">
       <div class="returnBtn" @click="hidDetail"><el-icon><ArrowLeftBold /></el-icon></div>
@@ -53,15 +58,39 @@
 </template>
 
 <script setup name="smartClass">
+import { appoint } from "@/request/modules/appointOpening";
 import { ref } from "vue";
+import dayjs from 'dayjs'
 let isShow = ref(false);
-let isDone = ref(true);
 function showDetail() {
   isShow.value = true;
 }
 function hidDetail() {
   isShow.value = false;
 }
+function appointFn() {
+  appoint().then(() => {
+    ElMessage.success("预约成功")
+    let newAppointInfo = {
+      id: '001',
+      userName: '自己的名字',
+      time: dayjs(new Date()).format('YYYY-MM-DD'),
+      status:'待审核'
+    }
+    appointInfo.value.push(newAppointInfo)
+  }).catch(err => {
+    ElMessage.error(`操作失败，错误信息：${err}`)
+  })
+}
+let appointInfo = ref([
+  {
+    id:'001',
+    userName: '预约名字',
+    time: '预约时间',
+    status:'待审批'
+  }
+])
+
 </script>
 
 <style scoped>
@@ -104,6 +133,8 @@ h1 {
   animation: shadow 2s linear forwards;
 }
 .myAppointment {
+  display: flex;
+  flex-direction: column;
   padding: 20px 10px;
   width: 90vw;
   flex: 1;
@@ -115,9 +146,23 @@ h1 {
   margin-bottom: 20px;
   font-size: 30px;
 }
+.notFound{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+.notFound img{
+  margin-bottom: 100px;
+  width: 250px;
+}
+.notFound h2{
+  font-size: 40px;
+}
 .card-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);

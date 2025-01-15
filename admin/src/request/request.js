@@ -1,8 +1,8 @@
-import axios from 'axios'
+import axios from "axios";
 import { ElMessage, ElMessageBox } from "element-plus"; // 引入el 提示框
 
 // 定义 baseURL
-export const baseURL = 'http://113.45.133.116:9999';
+export const baseURL = "http://113.45.133.116:9999";
 
 // 创建 axios 实例
 export const request = axios.create({
@@ -13,21 +13,21 @@ export const request = axios.create({
 // 获取 token
 const token = () => {
   try {
-      if (sessionStorage.getItem("token")) {
-          return sessionStorage.getItem("token");
-      } else {
-          return null;
-      }
-  } catch (e) {
-      console.error('获取token出现异常：', e);
+    if (sessionStorage.getItem("token")) {
+      return sessionStorage.getItem("token");
+    } else {
       return null;
+    }
+  } catch (e) {
+    console.error("获取token出现异常：", e);
+    return null;
   }
 };
 
 //请求拦截
 request.interceptors.request.use(
   (config) => {
-    console.log(sessionStorage.getItem('token'));
+    console.log(sessionStorage.getItem("token"));
     // 配置请求头
     config.headers["Content-Type"] = "application/json;charset=UTF-8";
     config.headers["Authorization"] = token();
@@ -44,10 +44,11 @@ request.interceptors.response.use(
     const { code, msg } = response.data;
     if (code !== 200) {
       // 如果 code 不是 200，弹出提示框显示错误信息
-      ElMessageBox.alert(msg || '请求失败', '请求失败', {
-        type: 'error',
-        confirmButtonText: '确定',
+      ElMessageBox.alert(msg || "请求失败", "请求失败", {
+        type: "error",
+        confirmButtonText: "确定",
       });
+      return Promise.reject(new Error(msg || "请求失败"))
     }
 
     // 如果是 200，返回数据
@@ -55,9 +56,9 @@ request.interceptors.response.use(
   },
   (error) => {
     // 处理其他错误，如网络错误、服务器错误等
-    ElMessageBox.alert('请求失败，请检查网络或稍后重试', '网络错误', {
-      type: 'error',
-      confirmButtonText: '确定',
+    ElMessageBox.alert("请求失败，请检查网络或稍后重试", "网络错误", {
+      type: "error",
+      confirmButtonText: "确定",
     });
 
     return Promise.reject(error); // 返回错误

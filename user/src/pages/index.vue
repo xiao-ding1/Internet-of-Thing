@@ -25,6 +25,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 // 定义响应式数据，用于控制菜单是否展开
 const isMenuOpen = ref(false)
 const isMenuShow = ref(true)
@@ -77,8 +78,102 @@ watch(isMenuOpen, () => {
   setMenuItemStyles()
 })
 
+let socket_ord
+let socket_sen
+let socket_switch
+const store = useStore()
 onMounted(() => {
   setMenuItemStyles()
+  // socket_ord = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/B?Authorization=${sessionStorage.getItem('token')}`)
+  // socket_ord.onopen = function () {
+  //       // ElMessage({
+  //       //     type: "success",
+  //       //     message: "成功连接设备"
+  //       // })
+  //       // console.log("成功连接");
+  //   }
+  //   socket_ord.onmessage = function (e) {
+  //     const msg = e.data
+  //     if (/'通过'/.test(msg)) {
+  //         store.commit('appointInfo/setIsPass',true)
+  //     }
+  //   }
+  //   socket_ord.onerror = function (e) {
+  //       // ElMessage({
+  //       //     type: "error",
+  //       //     message: "网络错误，请联系管理员查询错误"
+  //       // })
+  //   }
+  //   socket_ord.onclose = function (e) {
+  //       // if (e.wasClean) {
+  //       //     ElMessage({
+  //       //         type: "info",
+  //       //         message: "连接已断开"
+  //       //     })
+  //       // }
+  // }
+  // socket_sen = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/D?Authorization=${sessionStorage.getItem("token")}`)
+  // socket_sen.onopen = function () {
+  //       // ElMessage({
+  //       //     type: "success",
+  //       //     message: "成功连接设备"
+  //       // })
+  //       // console.log("成功连接");
+  //   }
+  //   socket_sen.onmessage = function (e) {
+  //     const msg = JSON.parse(e.data)
+  //     const { type, value } = msg
+  //     if (type == 1) {
+  //       store.commit('classInfo/setRayNum',value)
+  //     } else if (type == 2) {
+  //       store.commit('classInfo/setTemNum',value)
+  //     }    
+  //   }
+  //   socket_sen.onerror = function (e) {
+  //       // ElMessage({
+  //       //     type: "error",
+  //       //     message: "网络错误，请联系管理员查询错误"
+  //       // })
+  //   }
+  //   socket_sen.onclose = function (e) {
+  //       // if (e.wasClean) {
+  //       //     ElMessage({
+  //       //         type: "info",
+  //       //         message: "连接已断开"
+  //       //     })
+  //       // }
+  // }
+  // socket_switch = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/A?Authorization=${sessionStorage.getItem("token")}`)
+  // socket_switch.onopen = function () {
+  //       // ElMessage({
+  //       //     type: "success",
+  //       //     message: "成功连接设备"
+  //       // })
+  //       // console.log("成功连接");
+  //   }
+  //   socket_switch.onmessage = function (e) {
+  //     const msg = JSON.parse(e.data)
+  //     const { type, value } = msg
+  //     if (type == 2) {
+  //       store.commit('classInfo/setCurtainStatus',value==0?true:false)
+  //     } else if (type == 3) {
+  //       store.commit('classInfo/setFanStatus',value==1?true:false)
+  //     }    
+  //   }
+  //   socket_switch.onerror = function (e) {
+  //       // ElMessage({
+  //       //     type: "error",
+  //       //     message: "网络错误，请联系管理员查询错误"
+  //       // })
+  //   }
+  //   socket_switch.onclose = function (e) {
+  //       // if (e.wasClean) {
+  //       //     ElMessage({
+  //       //         type: "info",
+  //       //         message: "连接已断开"
+  //       //     })
+  //       // }
+  // }
 })
 </script>
 

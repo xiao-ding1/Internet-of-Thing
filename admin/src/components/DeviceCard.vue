@@ -1,14 +1,14 @@
 <template>
-    <el-card :class="isOpening ?'active':''" >
+    <el-card :class="{'active':isOpening}">
       <div class="top">
-          <div class="deviceIcon" :class="isOpening?'active':''">
+          <div class="deviceIcon" :class="{'active':isOpening}">
             <!-- 设备图标 -->
             <i :class="`iconfont ${deviceIcon}`"></i>
           </div>
           <div>
                 <i class="iconfont icon-mianxingwendujitubiao" v-if="deviceInfo.deviceName==='风扇'"></i>
                 <i class="iconfont icon-guangzhaoqiangdu" v-else></i>
-                {{ num}}&nbsp;
+                {{num}}&nbsp;
                 <el-switch
                     v-model="isOpening"
                     :before-change="Control"
@@ -22,15 +22,10 @@
       <div class="card_body">
         <div class="deviceName">{{ deviceInfo.deviceName }}</div>
         <div class="deviceInfo" @click.stop="">
-            <el-button-group>
-                <el-button size="small" :type="isAuto?'info':'primary'" @click="changeMode('manual')">手动</el-button>
-                <el-tooltip placement="bottom" :content="`当前阙值为${deviceInfo.currentflag}，是否要调至自动挡？`" :disabled="isAuto">
-                    <el-button size="small" :type="isAuto?'primary':'info'" @click="changeMode('auto')">自动</el-button>
-                </el-tooltip>
-                <el-tooltip placement="bottom" :content="`当前为自动挡，阙值为${deviceInfo.currentflag}，超过自动开启，点击修改阙值`">
-                    <el-button v-if="isAuto" size="small" type="primary" @click="openEdit"><el-icon><Edit /></el-icon></el-button>
-                </el-tooltip>
-            </el-button-group>
+            <span>当前阙值为{{ deviceInfo.currentflag }}</span>&nbsp;
+            <el-tooltip placement="bottom" :content="`当前阙值为${deviceInfo.currentflag}，超过阙值则自动开启，点击修改阙值`">
+                <el-button size="small" type="primary" @click="openEdit"><el-icon><Edit /></el-icon></el-button>
+            </el-tooltip>
         </div>
       </div>
     </el-card>
@@ -38,7 +33,7 @@
     
 <script setup name='DeviceCard'>
 import { ElInputNumber } from 'element-plus'
-import { ref, h, onMounted, computed,watch} from 'vue'
+import { ref, h, onMounted, computed} from 'vue'
 import { setFanFlag, setCurtainFlag, controlFan, controlCurtain } from '@/request/modules/class'
 import { useStore } from 'vuex'
 const store = useStore()
@@ -51,66 +46,51 @@ let deviceInfo = ref({
 })
 let deviceIcon
 let isLoading = ref(false)
-let isAuto = ref(true)
 function Control() {
     isLoading.value = true
-    if (isAuto.value) {
-        ElMessage.success('模式自动切换成手动模式')
-        isAuto.value = false
-    }
     return new Promise((resolve, reject) => {
         if (isOpening.value) {
             //关闭
-            deviceInfo.value.controlDeviceFn(0).then((res) => {
-                const { code} = res.data
-                if (code >= 200 && code < 300) {
-                    store.commit("classInfo/setFanStatus",false)
-                    // if (device == 'fan') {
-                    //     store.commit("classInfo/setFanStatus",false)
-                    //     ElMessage.success('风扇已关闭')
-                    // } else {
-                    //     store.commit("classInfo/setCurtainStatus",false)
-                    //     ElMessage.success('窗帘已卷起')
-                    // }
-                    if (isOpening.value == false) {
-                        ElMessage.success(device=='fan'?'风扇已关闭':'窗帘已卷起')
-                    }
+            deviceInfo.value.controlDeviceFn(0).then(() => {
+                //测试代码
+                if (device == 'fan') {
+                    store.commit('classInfo/setFanStatus',false)
+                } else {
+                    store.commit('classInfo/setCurtainStatus',false)
                 }
+                //逻辑处理
+                if (isOpening.value == false) {
+                    ElMessage.success(device=='fan'?'风扇已关闭':'窗帘已卷起')
+                } else {
+                    ElMessage.error("操作失败，错误信息：设备未开启")
+                }
+            }).catch((err) => {
+                ElMessage.error(`操作失败，请稍后再试，错误信息${err.message}`)
             }).finally(() => {
                 isLoading.value = false
             })
         } else {
             //开启
             deviceInfo.value.controlDeviceFn(1).then((res) => {
-                const { code} = res.data
-                if (code >= 200 && code < 300) {
-                    store.commit("classInfo/setFanStatus", true)
-                    // if (device == 'fan') {
-                    //     store.commit("classInfo/setFanStatus",false)
-                    //     if (isOpening.value == true) {
-                    //         ElMessage.success('风扇已打开')
-                    //     }
-                    // } else {
-                    //     store.commit("classInfo/setCurtainStatus",false)
-                    //     ElMessage.success('窗帘已放下')
-                    // }
-                    if (isOpening.value == true) {
-                        ElMessage.success(device=='fan'?'风扇已打开':'窗帘已放下')
-                    }
+                //测试代码
+                if (device == 'fan') {
+                    store.commit('classInfo/setFanStatus',true)
+                } else {
+                    store.commit('classInfo/setCurtainStatus',true)
                 }
+                //逻辑处理
+                if (isOpening.value == true) {
+                    ElMessage.success(device=='fan'?'风扇已开启':'窗帘已放下')
+                } else {
+                    ElMessage.error("操作失败，错误信息：设备未开启")
+                }
+            }).catch((err) => {
+                ElMessage.error(`操作失败，请稍后再试，错误信息${err.message}`)
             }).finally(() => {
                 isLoading.value = false
             })
         }  
     })
-}
-function changeMode(way) {
-    //改变控制模式
-    if (way == "auto") {
-        isAuto.value = true
-    } else {
-        isAuto.value = false
-    }
 }
 function openEdit() {
     let num = ref(1)
@@ -206,6 +186,9 @@ onMounted(() => {
         background-color: rgba(84, 112, 198,.2);
         color: #143275;
     }
+    .deviceIcon i{
+        font-size: inherit;
+    }
     .deviceIcon.active{
         background-color: #fff;
         color: #143275;
@@ -226,6 +209,7 @@ onMounted(() => {
     .card_body .deviceInfo{
         display: flex;
         align-items: center;
+        justify-content: end;
     }
     .deviceInfo>div{
         margin-right: 10px;

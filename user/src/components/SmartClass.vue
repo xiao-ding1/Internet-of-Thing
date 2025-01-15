@@ -15,8 +15,8 @@
     </div>
     <div class="subText">窗帘和风扇情况</div>
     <div class="controlCard">
-      <DeviceCard/>
-      <DeviceCard/>
+      <DeviceCard device="fan"/>
+      <DeviceCard device="curtain"/>
     </div>
 </template>
     
