@@ -12,17 +12,47 @@
 <script lang="ts" setup>
 
 import Title from './Title.vue';
-import { ref, onBeforeUpdate, onMounted } from 'vue';
+import { ref, onBeforeUpdate, onMounted, watch, defineProps } from 'vue';
 import { controlLamp } from '@/request/modules/lampControl';
 import Loading from './Loading.vue'
+let { lampDeviceStatus } = defineProps(['lampDeviceStatus'])
 const lampImg = ref(null)
-const isClicked = ref(false)//控制灯泡开关状态
+const isClicked = ref(lampDeviceStatus)//控制灯泡开关状态
 const newImageStyle = ref({})
 const loading = ref(false)//加载状态
 const loadingMessage=ref('')
 const subtext = "智能控灯 由此开始"
 const text = '网    络    控    灯'
-onMounted(() => {
+//灯泡开关
+const toggleImage = async () => {
+  loading.value = true
+  try {
+    if (isClicked.value) {
+      loadingMessage.value='正在关闭灯泡'
+      const res = await controlLamp(0)
+      if (res && res.data.msg === 'success'){
+      isClicked.value = false//更新灯泡状态为关闭
+      ElMessage.success('已关闭灯泡')}
+    } else {
+      loadingMessage.value='正在开启灯泡'
+      // 发送请求来打开灯泡
+      const res = await controlLamp(1)
+      if (res && res.data.msg === 'success'){
+      isClicked.value = true// 更新灯泡状态为打开
+      ElMessage.success('已开启灯泡')}
+    }
+  } catch (error) {
+    console.error('请求失败:', error)
+    ElMessage.error(isClicked.value? `${error.message}关灯操作失败，请稍后再试` : `${error.message}开灯操作失败，请稍后再试`)
+  } finally {
+    loading.value = false
+  }
+}
+watch(() => lampDeviceStatus, 
+  (newValue) => {isClicked.value = newValue},
+  { immediate: true }
+)
+onMounted(
   async () =>{
     try {
       await controlLamp(0)
@@ -30,8 +60,7 @@ onMounted(() => {
     catch (error){
     console.log(error)            
     }
-  }
-})
+  })
 onBeforeUpdate(() => {
   if (lampImg.value) {
     newImageStyle.value = {
@@ -50,29 +79,6 @@ onBeforeUpdate(() => {
     }, 1)
   }
 })
-//灯泡开关
-const toggleImage = async () => {
-  loading.value = true
-  try {
-    if (isClicked.value) {
-      loadingMessage.value='正在关闭灯泡'
-      await controlLamp(0)
-      isClicked.value = false//更新灯泡状态为关闭
-      ElMessage.success('已关闭灯泡')
-    } else {
-      loadingMessage.value='正在开启灯泡'
-      // 发送请求来打开灯泡
-      await controlLamp(1)
-      isClicked.value = true// 更新灯泡状态为打开
-      ElMessage.success('已开启灯泡')
-    }
-  } catch (error) {
-    console.error('请求失败:', error)
-    ElMessage.error(isClicked.value? `${error.message}关灯操作失败，请稍后再试` : `${error.message}开灯操作失败，请稍后再试`)
-  } finally {
-    loading.value = false
-  }
-}
 </script>
 
 <style>

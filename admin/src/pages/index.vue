@@ -62,23 +62,6 @@ let ws_blu
 let ws_approve
 let ws_sen
 let ws_switch
-// 当智能教室窗帘状态变化时，会发送下面的消息
-// {
-//     "type":2
-//     "status":1
-// }
-
-// 1标识窗帘卷起
-// 0标识窗帘放下
-
-// 当智能教室风扇状态变化时，会发送下面的消息
-// {
-//     "type":3
-//     "status":1
-// }
-
-// 1标识风扇开
-// 0标识风扇关
 onMounted(() => {
   const store = useStore()
   ws_blu = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/F?Authorization=${sessionStorage.getItem("token")}`)

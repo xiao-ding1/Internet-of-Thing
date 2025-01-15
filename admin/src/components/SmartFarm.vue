@@ -35,7 +35,7 @@
         <span class="text-content" v-show="showSmessage" @click.stop>
           <div class="card2">
             <h2>实时光照</h2>
-            <div class="content">{{ currentSun }}度</div>
+            <div class="content">{{ currentSun }}lx</div>
             <el-icon>
               <Sunny class="sun"/>
             </el-icon>
@@ -65,7 +65,7 @@
         <span class="text-content" v-show="showWmessage" @click.stop>
           <div class="card3">
             <h2>实时湿度</h2>
-            <div class="content">{{ currentWet }}度</div>
+            <div class="content">{{ currentWet }}%</div>
             <el-icon><Pouring class="sun"/></el-icon>
           </div>
           <div class="slider-demo-block">
@@ -95,10 +95,11 @@
 
 <script setup >
 import Title from './Title.vue';
-import { ref } from 'vue';
+import { ref,defineProps,watch } from 'vue';
 import { sendTemperature,sendWet,sendSunray,sendCloseTime} from '@/request/modules/farm';
 import Loading from './Loading.vue';
-const currentTemp= ref(1);
+let {rayNum, temNum, wetNum} = defineProps(['rayNum','temNum','wetNum']);
+let currentTemp = ref(temNum);
 // 最低温滑块绑定的数据
 const minTemp = ref(0);
 // 最高温滑块绑定的数据
@@ -112,7 +113,7 @@ const maxSliderMin = ref(0);
 // 最高温滑块的最大值
 const maxSliderMax = ref(100);
 // 实时光照数据，
-const currentSun = ref(1);
+let currentSun = ref(rayNum);
 // 最暗光线滑块绑定的数据
 const minSun = ref(0);
 // 最暗光线滑块的最小值
@@ -120,7 +121,7 @@ const minSunSliderMin = ref(0);
 // 最暗光线滑块的最大值
 const minSunSliderMax =ref(50);
 // 实时湿度数据
-const currentWet=ref(1);
+let currentWet = ref(wetNum);
 // 最低湿度滑块
 const minWet= ref(0);
 // 最高湿度滑块
@@ -147,6 +148,7 @@ const showWmessage = ref(false);
 const time= ref('');
 // 加载状态
 const loading = ref(false);
+
 const toggleMessage = (type)=>{
   switch (type) {
     case 'temperature':
@@ -161,15 +163,16 @@ const toggleMessage = (type)=>{
   }
 }
 
-const ws = new WebSocket('ws://113.45.133.116:9999');
 // 温度设置发送请求的函数
 const sendTemperatureRequest = async()=>{
   loading.value=true
   try {
-    const response = await sendTemperature(minTemp.value, maxTemp.value)
-    console.log(response.data)
+    const res=await sendTemperature(minTemp.value, maxTemp.value)
+    if (res.data && res.data.msg ==='success') {
+      ElMessage.success('已成功设置温度')
+    }
   } catch (error) {
-    console.error('温度设置请求发送失败', error)
+    ElMessage.error('温度设置失败', error)
   } finally {
     loading.value = false
   }
@@ -180,10 +183,12 @@ const sendTemperatureRequest = async()=>{
 const sendWetRequest = async()=>{
   loading.value=true
   try {
-    const response = await sendWet(minWet.value, maxWet.value)
-    console.log(response.data)
+    const res=await sendWet(minWet.value, maxWet.value)
+    if (res.data && res.data.msg ==='success') {
+    ElMessage.success('已成功设置湿度')
+    }
   } catch (error) {
-    console.error('温度设置请求发送失败', error)
+    ElMessage.error('湿度设置失败', error)
   } finally {
     loading.value = false
   }
@@ -193,26 +198,62 @@ const sendWetRequest = async()=>{
 const sendSunRequest = async()=>{
   loading.value=true
   try {
-    const response = await sendSunray(minSunSliderMin.value)
-    console.log(response.data)
+   const res=await sendSunray(minSunSliderMin.value)
+   if (res.data && res.data.msg ==='success') {
+    ElMessage.success('已成功设置光线强度')
+   }
   } catch (error) {
-    console.error('温度设置请求发送失败', error)
+    ElMessage.error('光线强度设置失败', error)
   } finally {
     loading.value = false
   }
 }
 //发送时间
+function formatDate (d) {
+   var date = new Date(d);
+   var YY = date.getFullYear() + '-';
+   var MM =
+     (date.getMonth() + 1 < 10
+       ? '0' + (date.getMonth() + 1)
+       : date.getMonth() + 1) + '-';
+   var DD = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+   var hh =
+     (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+   var mm =
+     (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) +
+     ':';
+   var ss =
+     date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+   return YY + MM + DD + ' ' + hh + mm + ss;
+ }
+
 const sendTimeRequest = async()=>{
   loading.value=true
+  let startDate = formatDate(time.value)
   try{
-    const response = await sendCloseTime(time.value)
-    console.log(response)
+    const res = await sendCloseTime(startDate)
+    if (res.data && res.data.msg ==='success') {
+      ElMessage.success('已成功设置时间')
+    }
   }catch(error){
     console.error('时间设置失败',error)
   } finally {
     loading.value = false
   }
 }
+watch(() => temNum, (newValue) => {
+  currentTemp.value = newValue
+}, { immediate: true })
+
+watch(() => rayNum, (newValue) => {
+  currentSun.value = newValue
+}, { immediate: true })
+
+// 使用 watch 来监听 wetNum 的变化并更新 currentWet
+watch(() => wetNum, (newValue) => {
+  currentWet.value = newValue
+}, { immediate: true })
+
 </script>
 
 <style scoped>
