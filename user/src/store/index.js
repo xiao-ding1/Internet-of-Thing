@@ -58,11 +58,44 @@ const classInfo = {
     },
   },
 };
+const lampInfo = {
+  namespaced: true,
+  state: {
+    lampDeviceStatus:false
+    },
+  mutations: {
+    setLampStatus: (state, lampDeviceStatus) => {
+      state.lampDeviceStatus = lampDeviceStatus
+    }
+  }
+}
+
+const farmInfo = {
+  namespaced:true,
+  state: {
+    rayStatus: false,
+    temStatus: false,
+    wetStatus: false
+  },
+  mutations: {
+    setRayStatus: (state, rayStatus) => {
+      state.rayStatus =  rayStatus
+    },
+    setTemStatus: (state,temStatus) => {
+      state.temStatus = temStatus
+    },
+    setWetStatus: (state, wetStatus) => {
+      state.wetStatus = wetStatus
+    }
+  }
+}
 
 export default createStore({
   modules: {
     appointInfo,
     classInfo,
-    loginInfo
+    loginInfo,
+    lampInfo,
+    farmInfo
   },
 });

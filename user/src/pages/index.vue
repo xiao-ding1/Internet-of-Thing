@@ -165,7 +165,10 @@ onMounted(() => {
   //         store.commit('farmInfo/setTemStatus',value==1?true:false)
   //       } else if (type == 6) {
   //         store.commit('farmInfo/setRayStatus',value==1?true:false)
+  //       } else if (type == 1) {
+  //         store.commit('lampInfo/setLampStatus',value==1?true:false)
   //       }  
+              
   //   }
   //   socket_switch.onerror = function (e) {
   //       // ElMessage({
