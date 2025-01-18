@@ -84,13 +84,13 @@ const handleSubmit = async() => {
     username.value = '';
     password.value = '';
   }catch(error){
-    if (error?.message) {
-      // 拦截器返回的自定义错误
-      ElMessageBox.alert(`登录失败。错误信息: ${error.message}`);
-    } else {
-      // 未知错误或网络问题
-      ElMessageBox.alert("登录失败，请检查网络或稍后重试");
-    }
+    // if (error?.message) {
+    //   // 拦截器返回的自定义错误
+    //   ElMessageBox.alert(`登录失败。错误信息: ${error.message}`);
+    // } else {
+    //   // 未知错误或网络问题
+    //   ElMessageBox.alert("登录失败，请检查网络或稍后重试");
+    // }
   }
 };
 </script>
