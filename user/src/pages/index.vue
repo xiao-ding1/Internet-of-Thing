@@ -159,7 +159,13 @@ onMounted(() => {
   //       store.commit('classInfo/setCurtainStatus',value==0?true:false)
   //     } else if (type == 3) {
   //       store.commit('classInfo/setFanStatus',value==1?true:false)
-  //     }    
+  //     }  else if (type == 4) {
+  //         store.commit('farmInfo/setWetStatus',value==1?true:false)
+  //       } else if (type == 5) {
+  //         store.commit('farmInfo/setTemStatus',value==1?true:false)
+  //       } else if (type == 6) {
+  //         store.commit('farmInfo/setRayStatus',value==1?true:false)
+  //       }  
   //   }
   //   socket_switch.onerror = function (e) {
   //       // ElMessage({

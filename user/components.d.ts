@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    1: typeof import('./src/components/tree.vue')['default']
     BlueOpening: typeof import('./src/components/BlueOpening.vue')['default']
     DeviceCard: typeof import('./src/components/DeviceCard.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -15,6 +16,7 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    FarmCard: typeof import('./src/components/FarmCard.vue')['default']
     LampControl: typeof import('./src/components/LampControl.vue')['default']
     Loading: typeof import('./src/components/Loading.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
