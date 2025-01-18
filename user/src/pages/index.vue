@@ -1,5 +1,6 @@
 <template>
   <div :style="{animationName:isMenuShow?'menuShow':'menuHid'}" class="menuPage">
+    <button class="logout-btn" @click="handleLogout">退出登录</button>
     <div class="closeMenu" @click="hidMenu"><el-icon><CloseBold /></el-icon></div>
     <nav class="menu">
       <div class="ring">
@@ -175,6 +176,12 @@ onMounted(() => {
   //       // }
   // }
 })
+
+const handleLogout = () => {
+  store.commit('loginInfo/setLoginInfo', { username: '', token: ''});
+  sessionStorage.removeItem('token');
+  router.push('/');
+}
 </script>
 
 <style>
@@ -398,4 +405,25 @@ onMounted(() => {
     transform: rotate(360deg);
   }
 }
+.logout-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius:50%;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+  transition: background-color 0.3s;
+  width:90px;
+  height:90px;
+}
+
+.logout-btn:hover {
+  background-color: #d9363e;
+}
+
 </style>

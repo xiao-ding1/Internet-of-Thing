@@ -1,4 +1,24 @@
 import { createStore } from "vuex";
+const loginInfo = {
+  namespaced:true,
+  state: () => ({
+    username: null,
+    token: null,
+    // roleId: null,
+  }),
+  mutations: {
+    setLoginInfo:(state,{username,token,roleId})=>{
+      state.username = username;
+      state.token = token;
+      state.roleId = roleId;
+    },
+    setLogoutInfo:(state,{username,token,roleId})=>{
+      state.username = null;
+      state.token = null;
+      state.roleId = null;
+    }
+  }
+}
 
 const appointInfo = {
   state: {
@@ -42,6 +62,7 @@ const classInfo = {
 export default createStore({
   modules: {
     appointInfo,
-    classInfo
+    classInfo,
+    loginInfo
   },
 });
