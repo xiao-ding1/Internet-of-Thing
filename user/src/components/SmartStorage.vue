@@ -1,5 +1,7 @@
 <template>
+   <div class="introBox">
   <h1>智能仓储</h1>
+   </div>
   <div class="page">
   <Loading  v-if="loading"/>
   <div class="topChoose">
@@ -151,7 +153,7 @@ watch(searchText, (newVal, oldVal) => {
 
 <style scoped>
 .page {
-  margin-top: 120px;
+  margin-top: 40px;
 }
 .topChoose {
   display: flex;
@@ -162,11 +164,12 @@ watch(searchText, (newVal, oldVal) => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
   font-size: 20px;
+  padding-left: 60px;
 }
 
 select {
-  padding: 10px 0px;
-  padding-right: 40px;
+  padding: 10px 10px;
+  padding-right: 50px;
   border: 1px solid #b9d3e8;
   border-radius: 5px;
   outline: none;
@@ -175,6 +178,7 @@ select {
   color: #4a76a8;
   transition: all 0.3s ease;
   font-size: 26px;
+  margin-right: 10px;
 }
 select option {
   font-size: 10px;
@@ -198,7 +202,7 @@ input {
   transition: all 0.3s ease;
   font-size: 26px;
   width: 250px;
-  margin-left: 20px;
+  margin-left: 40px;
 }
 
 input:focus {
@@ -228,19 +232,20 @@ button:hover {
   color: #99b4d0;
 }
 .info-container {
-  padding: 30px;
-  background-color: rgb(138, 200, 248);
+  width: 70%;
+  background-color: rgb(198, 230, 255);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
-  max-height: 100%;
+  max-height: 1100px;
+  
  }
 
 h1 {
   margin: 40px 0 20px 0;
       text-align: center;
       transition:2s;
-      color: #75a7dc;
+      color: #ffffff;
       font-size: 60px;
       animation: shadow 2s linear forwards;
       margin-bottom: 40px;
@@ -256,28 +261,32 @@ h1 {
               50%, rgba(255, 255, 255, 0.3));
       }
     }
-h2{
-  font-size: 24px;
-  color: #4a76a8;
-  padding-bottom: 10px;
-  margin-left: 5px;
-}
-h3 {
-  font-size: 20px;
-  margin-bottom: 12px;
-  color: #4a76a8;
-  font-weight: 400;
-  margin-left: 10px;
-  padding-top: 5px;
+
+  .item-card {
+    display: block;
+    background-color: hsla(215, 98%, 53%, 0.491);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    min-height: 180px;
+    margin: 20px auto;
+    color: rgb(255, 255, 255);
+    padding: 40px;
+    word-break: break-all;
 }
 
-.item-card {
-  display: block;
-  background-color: #f0f5fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px; 
+h2 {
+    font-size: 34px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    margin-left: 0;
+    text-align: left;
 }
 
 .load-more {
@@ -288,5 +297,14 @@ h3 {
   cursor: pointer;
   color: #4a76a8;
   margin-top: 20px;
+}
+.introBox {
+  padding: 20px;
+  width: 100vw;
+  position: relative;
+  background-color: #1709b1;
+  height: 300px;
+  border-radius: 0 0 100px 100px;
+  transition: 1s;
 }
 </style>
