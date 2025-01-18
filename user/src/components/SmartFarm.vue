@@ -65,6 +65,7 @@ const toggleDripStatus = async () => {
    const res = await controllWet(status)
    if (res.data && res.data.msg === 'success') {
     store.commit("farmInfo/setWetStatus",!dripStatus.value)
+    ElMessage.success('已成功开启滴灌设备')
    }
   } catch (error) {
     console.error('滴灌设备状态更新失败', error)
@@ -81,6 +82,7 @@ const toggleLightStatus = async () => {
    const res = await controllRay(status)
    if (res.data && res.data.msg === 'success') {
     store.commit("farmInfo/setRayStatus",!lightStatus.value)
+    ElMessage.success('已成功开启照明设备')
    }
   } catch (error) {
     console.error('照明设备状态更新失败', error)
@@ -97,6 +99,7 @@ const toggleVentilationStatus = async () => {
    const res = await controllFan(status)
    if (res.data && res.data.msg === 'success') {
     store.commit("farmInfo/setTemStatus",!ventilationStatus.value)
+    ElMessage.success('已成功开启通风设备')
    }
   } catch (error) {
     console.error('通风设备状态更新失败', error)
