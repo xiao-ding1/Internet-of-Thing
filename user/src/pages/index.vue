@@ -27,6 +27,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { request } from '@/request/request';
 // 定义响应式数据，用于控制菜单是否展开
 const isMenuOpen = ref(false)
 const isMenuShow = ref(true)
@@ -191,6 +192,17 @@ const handleLogout = () => {
   sessionStorage.removeItem('token');
   router.push('/');
 }
+//请求板子中对应硬件的状态，以打开ws
+onMounted (async () => {
+  try {
+   const res = await request.get('/board/status/0')
+   if (res.data && res.data.msg === 'success') {
+    console.log('开启开关状态ws')
+   }
+  } catch (error) {
+    console.error(error)
+  }
+})
 </script>
 
 <style>
