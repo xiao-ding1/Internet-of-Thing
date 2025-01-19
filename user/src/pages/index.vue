@@ -1,5 +1,6 @@
 <template>
   <div :style="{animationName:isMenuShow?'menuShow':'menuHid'}" class="menuPage">
+    <button class="logout-btn" @click="handleLogout">退出登录</button>
     <div class="closeMenu" @click="hidMenu"><el-icon><CloseBold /></el-icon></div>
     <nav class="menu">
       <div class="ring">
@@ -26,6 +27,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { request } from '@/request/request';
 // 定义响应式数据，用于控制菜单是否展开
 const isMenuOpen = ref(false)
 const isMenuShow = ref(true)
@@ -158,7 +160,16 @@ onMounted(() => {
   //       store.commit('classInfo/setCurtainStatus',value==0?true:false)
   //     } else if (type == 3) {
   //       store.commit('classInfo/setFanStatus',value==1?true:false)
-  //     }    
+  //     }  else if (type == 4) {
+  //         store.commit('farmInfo/setWetStatus',value==1?true:false)
+  //       } else if (type == 5) {
+  //         store.commit('farmInfo/setTemStatus',value==1?true:false)
+  //       } else if (type == 6) {
+  //         store.commit('farmInfo/setRayStatus',value==1?true:false)
+  //       } else if (type == 1) {
+  //         store.commit('lampInfo/setLampStatus',value==1?true:false)
+  //       }  
+              
   //   }
   //   socket_switch.onerror = function (e) {
   //       // ElMessage({
@@ -174,6 +185,23 @@ onMounted(() => {
   //       //     })
   //       // }
   // }
+})
+
+const handleLogout = () => {
+  store.commit('loginInfo/setLoginInfo', { username: '', token: ''});
+  sessionStorage.removeItem('token');
+  router.push('/');
+}
+//请求板子中对应硬件的状态，以打开ws
+onMounted (async () => {
+  try {
+   const res = await request.get('/board/status/0')
+   if (res.data && res.data.msg === 'success') {
+    console.log('开启开关状态ws')
+   }
+  } catch (error) {
+    console.error(error)
+  }
 })
 </script>
 
@@ -398,4 +426,25 @@ onMounted(() => {
     transform: rotate(360deg);
   }
 }
+.logout-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius:50%;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+  transition: background-color 0.3s;
+  width:90px;
+  height:90px;
+}
+
+.logout-btn:hover {
+  background-color: #d9363e;
+}
+
 </style>

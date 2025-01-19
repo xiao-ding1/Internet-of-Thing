@@ -5,10 +5,20 @@ import SmartClass from "@/components/SmartClass.vue";
 import SmartStorage from "@/components/SmartStorage.vue";
 import SmartFarm from "@/components/SmartFarm.vue";
 import LampControl from "@/components/LampControl.vue";
+import Login from "@/pages/login-u.vue"
+import Index from "@/pages/index.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/blue",
+    redirect: "/login",
+  },
+  {
+    path: "/login",
+    component: Login,
+  },
+  {
+    path: "/menue",
+    component: Index,
   },
   {
     path: "/blue",

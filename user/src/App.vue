@@ -1,9 +1,11 @@
 <template>
-  <Index/>
+  <RouterView></RouterView>
 </template>
 
 <script setup>
 import Index from './pages/index.vue';
+import Login from './pages/login-u.vue';
+import { RouterView } from 'vue-router';
 </script>
 
 <style>

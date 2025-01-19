@@ -8,35 +8,20 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BlueOpening: typeof import('./src/components/BlueOpening.vue')['default']
-    Button: typeof import('./src/components/button.vue')['default']
     DeviceCard: typeof import('./src/components/DeviceCard.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
-    ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
-    ElDialog: typeof import('element-plus/es')['ElDialog']
-    ElForm: typeof import('element-plus/es')['ElForm']
-    ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
-    ElInput: typeof import('element-plus/es')['ElInput']
-    ElMenu: typeof import('element-plus/es')['ElMenu']
-    ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
-    ElOption: typeof import('element-plus/es')['ElOption']
-    ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
-    ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
-    ElTable: typeof import('element-plus/es')['ElTable']
-    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     LampControl: typeof import('./src/components/LampControl.vue')['default']
+    Loading: typeof import('./src/components/Loading.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SmartClass: typeof import('./src/components/SmartClass.vue')['default']
     SmartFarm: typeof import('./src/components/SmartFarm.vue')['default']
     SmartOpening: typeof import('./src/components/SmartOpening.vue')['default']
     SmartStorage: typeof import('./src/components/SmartStorage.vue')['default']
-  }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

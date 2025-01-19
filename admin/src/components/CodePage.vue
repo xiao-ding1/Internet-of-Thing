@@ -1,29 +1,28 @@
 <template>
-  <div class="main-page">
+  <!-- <div class="main-page"> -->
     <!-- 工具栏 -->
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <button @click="openProjectDialog">
+    <!-- <div class="toolbar"> -->
+      <!-- <div class="toolbar-left"> -->
+        <!-- <button @click="openProjectDialog">
           <i class="icon-folder-open"></i> 打开工程
-        </button>
-        <button @click="saveProject" :disabled="!isProjectOpen">
+        </button> -->
+        <!-- <button @click="saveProject" :disabled="!isProjectOpen">
           <i class="icon-save"></i> 保存
         </button>
         <button @click="compileProject" :disabled="!isProjectOpen">
           <i class="icon-cogs"></i> 编译
-        </button>
-        <button @click="burnProject" :disabled="!isProjectOpen">
+        </button> -->
+        <!-- <button @click="burnProject" :disabled="!isProjectOpen">
           <i class="icon-fire"></i> 烧录
         </button>
         <button @click="closeProject" :disabled="!isProjectOpen">
           <i class="icon-close"></i> 关闭
         </button>
       </div>
-    </div>
+    </div> -->
 
     <!-- 内容区域 -->
-    <div class="content">
-      <!-- Splitter 显示 -->
+    <!-- <div class="content">
       <Splitter v-if="isProjectOpen && showCompileOutput">
         <template #top>
           <Coding @toggleCompileOutput="toggleCompileOutput" />
@@ -33,14 +32,13 @@
         </template>
       </Splitter>
 
-      <!-- 隐藏 CompileOutput 时 -->
       <div v-else-if="isProjectOpen && !showCompileOutput">
         <Coding @toggleCompileOutput="toggleCompileOutput" />
       </div>
-    </div>
+    </div> -->
 
     <!-- 选择工程弹窗 -->
-    <div class="dialog" v-if="showDialog">
+    <!-- <div class="dialog" v-if="showDialog">
       <div class="dialog-content">
         <h3>选择工程</h3>
         <ul>
@@ -58,75 +56,76 @@
         </button>
       </div>
     </div>
-  </div>
+  </div> -->
+  <h2>开始实验前请先烧录对应程序</h2>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import Coding from './Coding.vue';
-import CompileOutput from './CompileOutput.vue';
-import Splitter from './Splitter.vue';
+// import { ref } from 'vue';
+// import Coding from './Coding.vue';
+// import CompileOutput from './CompileOutput.vue';
+// import Splitter from './Splitter.vue';
 
-// 控制工程状态
-const isProjectOpen = ref(false);
-const showCompileOutput = ref(false);
+// // 控制工程状态
+// const isProjectOpen = ref(false);
+// const showCompileOutput = ref(false);
 
-// 控制弹出框
-const showDialog = ref(false);
-const projects = ref([
-  { name: '工程 1' },
-  { name: '工程 2' },
-  { name: '工程 3' },
-  { name: '工程 4' },
-  { name: '工程 5' },
-  { name: '工程 6' },
-]);
+// // 控制弹出框
+// const showDialog = ref(false);
+// const projects = ref([
+//   { name: '工程 1' },
+//   { name: '工程 2' },
+//   { name: '工程 3' },
+//   { name: '工程 4' },
+//   { name: '工程 5' },
+//   { name: '工程 6' },
+// ]);
 
-// 打开弹出框
-const openProjectDialog = () => {
-  showDialog.value = true;
-};
+// // 打开弹出框
+// const openProjectDialog = () => {
+//   showDialog.value = true;
+// };
 
-// 关闭弹出框
-const closeDialog = () => {
-  showDialog.value = false;
-};
+// // 关闭弹出框
+// const closeDialog = () => {
+//   showDialog.value = false;
+// };
 
-// 选择项目
-const selectProject = (project) => {
-  console.log(`打开 ${project.name}`);
-  isProjectOpen.value = true;
-  showDialog.value = false;
-};
+// // 选择项目
+// const selectProject = (project) => {
+//   console.log(`打开 ${project.name}`);
+//   isProjectOpen.value = true;
+//   showDialog.value = false;
+// };
 
-// 切换编译输出
-const toggleCompileOutput = () => {
-  showCompileOutput.value = !showCompileOutput.value;
-};
+// // 切换编译输出
+// const toggleCompileOutput = () => {
+//   showCompileOutput.value = !showCompileOutput.value;
+// };
 
-// 保存项目
-const saveProject = () => {
-  console.log('项目已保存');
-};
+// // 保存项目
+// const saveProject = () => {
+//   console.log('项目已保存');
+// };
 
-// 编译项目
-const compileProject = () => {
-  console.log('项目正在编译');
-};
+// // 编译项目
+// const compileProject = () => {
+//   console.log('项目正在编译');
+// };
 
-// 烧录项目
-const burnProject = () => {
-  console.log('项目正在烧录');
-};
+// // 烧录项目
+// const burnProject = () => {
+//   console.log('项目正在烧录');
+// };
 
-// 关闭项目
-const closeProject = () => {
-  isProjectOpen.value = false;
-  console.log('项目已关闭');
-};
+// // 关闭项目
+// const closeProject = () => {
+//   isProjectOpen.value = false;
+//   console.log('项目已关闭');
+// };
 
 </script>
-<style scoped>
+<!-- <style scoped>
 .main-page {
   display: flex;
   flex-direction: column;
@@ -258,4 +257,4 @@ button i {
 .close-btn:hover {
   background: #005f99;
 }
-</style>
+</style> -->
