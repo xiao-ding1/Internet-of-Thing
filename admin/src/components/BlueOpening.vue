@@ -63,7 +63,7 @@ function changeLockStatus() {
             '--ring-style2': 'ringClose',
         }
     }
-}   
+} 
 watch([isConnect,isLock],changeLockStatus)
 </script>
     

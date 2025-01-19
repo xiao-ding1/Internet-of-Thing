@@ -65,179 +65,115 @@ let ws_switch
 let ws_sign
 onMounted(() => {
   const store = useStore()
-  // ws_blu = new WebSocket(`ws://8.134.218.209/api/ws/F?Authorization=${sessionStorage.getItem("token")}`)
-  //   ws_blu.onopen = function () {
-  //       // ElMessage({
-  //       //     type: "success",
-  //       //     message: "成功连接设备"
-  //       // })
-  //       // console.log("成功连接");
-  //   }
-  //   ws_blu.onmessage = function (e) {
-  //       //根据状态修改isConnect和isLock信息
-  //       const msg = e.data
-  //       if (msg == "not connect") {
-  //           store.commit('blueInfo/setIsConnect',false)
-  //       } else {
-  //           store.commit('blueInfo/setIsConnect',true)
-  //           if (msg == "opened") {
-  //               store.commit('blueInfo/setIsLock',false)
-  //           } else {
-  //               store.commit('blueInfo/setIsLock',true)
-  //           }
-  //       }
-  //       changeLockStatus()
-  //   }
-  //   ws_blu.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   ws_blu.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
-  // ws_approve = new WebSocket(`ws://8.134.218.209/api/ws/B?Authorization=${sessionStorage.getItem("token")}`)
-  //   ws_approve.onopen = function () {
-  //       // ElMessage({
-  //       //     type: "success",
-  //       //     message: "成功连接设备"
-  //       // })
-  //       // console.log("成功连接");
-  //   }
-  //   ws_approve.onmessage = function (e) {
-  //       const msg = e.data
-  //         if (/申请/.test(msg)) {
-  //           store.commit('smartOpeningInfo/addTableInfo')
-  //         }
-  //   }
-  //   ws_approve.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   ws_approve.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
-  // ws_sen = new WebSocket(`ws://8.134.218.209/api/ws/D?Authorization=${sessionStorage.getItem("token")}`)
-  // ws_sen.onopen = function () {
-  //       // ElMessage({
-  //       //     type: "success",
-  //       //     message: "成功连接设备"
-  //       // })
-  //       // console.log("成功连接");
-  //   }
-  //   ws_sen.onmessage = function (e) {
-  //     const msg = JSON.parse(e.data)
-  //     const { type, value } = msg
-  //     if (type == 1) {
-  //       store.commit('classInfo/setRayNum',value)
-  //     } else if (type == 2) {
-  //       store.commit('classInfo/setTemNum',value)
-  //     } else if (type == 3) {
-  //       store.commit('farmInfo/setwetNum',value)
-  //     }  else if (type == 4) {
-  //       store.commit('farmInfo/settemNum',value)
-  //     }  else if (type == 5) {
-  //       store.commit('farmInfo/setrayNum',value)
-  //     } 
-  //   }
-  //   ws_sen.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   ws_sen.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
-  // ws_switch = new WebSocket(`ws://8.134.218.209/api/ws/A?Authorization=${sessionStorage.getItem("token")}`)
-  // ws_switch.onopen = function () {
-  //       // ElMessage({
-  //       //     type: "success",
-  //       //     message: "成功连接设备"
-  //       // })
-  //       // console.log("成功连接");
-  //   }
-  //   ws_switch.onmessage = function (e) {
-  //     const msg = JSON.parse(e.data)
-  //     const { type, value } = msg
-  //     if (type == 2) {
-  //       store.commit('classInfo/setCurtainStatus',value==0?true:false)
-  //     } else if (type == 3) {
-  //       store.commit('classInfo/setFanStatus',value==1?true:false)
-  //     } else if (type == 1) {
-  //       store.commit('lampInfo/setLampStatus',value==1?true:false)   
-  //   }
-  // }
-  //   ws_switch.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   ws_switch.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
-  // ws_sign = new WebSocket(`ws://8.134.218.209/api/ws/G?Authorization=${sessionStorage.getItem("token")}`)
-  // ws_sign.onopen = function () {
-    
-  // }
-  //   ws_sign.onmessage = function (e) {
-  //     const msg = JSON.parse(e.data)
-  //     if (/签到/.test(msg)) {
-  //      store.commit('classInfo/setSignInInfo',true)
-  //     } else if (/签退/.test(msg)){
-  //       store.commit('classInfo/setSignInInfo',false)
-  //     }
-  // }
-  //   ws_sign.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   ws_sign.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
+  function makeWs(url,handleFn) {
+    let ws
+    let wsUrl ="ws://8.134.218.209/api/ws"+url+`?Authorization=${sessionStorage.getItem("token")}`;
+    // 避免重复连接
+    let lockReconnect = false;
+    // 定时任务
+    let tt;
+    createWebSocket()
+    return ws
+    function createWebSocket() {
+      try {
+          ws = new WebSocket(wsUrl);
+          init();
+      } catch(e) {
+          console.log('ws连接错误' + e)
+          //重连
+          reconnect();
+      }
+      return ws
+    }
+    function init() {
+      ws.onopen = function () {
+        console.log('连接成功');
+      }
+      ws.onclose = function (e) {
+        if (e.code != 1000){
+          reconnect();
+        }
+      }
+      ws.onmessage = function (e) {
+          handleFn(e.data)
+      }
+    }
+    function reconnect() {
+      if(lockReconnect) {
+          return;
+        };
+        lockReconnect = true;
+        tt && clearTimeout(tt);
+        tt = setTimeout(function () {
+          createWebSocket();
+          lockReconnect = false;
+        }, 2000);
+    }
+  }
+  ws_blu = makeWs('/F', msg => {
+  // 根据状态修改isConnect和isLock信息
+    if (msg == "not connect") {
+        store.commit('blueInfo/setIsConnect',false)
+    } else {
+        store.commit('blueInfo/setIsConnect',true)
+        if (msg == "opened") {
+            store.commit('blueInfo/setIsLock',false)
+        } else {
+            store.commit('blueInfo/setIsLock',true)
+        }
+    }
+  })
+  ws_approve = makeWs('/B', msg => {
+    if (/申请/.test(msg)) {
+      store.commit('smartOpeningInfo/addTableInfo')
+    }
+  })
+  ws_sen = makeWs('/D', data => {
+    const msg = JSON.parse(data)
+    const { type, value } = msg
+    if (type == 1) {
+      store.commit('classInfo/setRayNum',value)
+    } else if (type == 2) {
+      store.commit('classInfo/setTemNum',value)
+    } else if (type == 3) {
+      store.commit('farmInfo/setwetNum',value)
+    }  else if (type == 4) {
+      store.commit('farmInfo/settemNum',value)
+    }  else if (type == 5) {
+      store.commit('farmInfo/setrayNum',value)
+    } 
+  })
+  ws_switch = makeWs('/A', data => {
+    const msg = JSON.parse(data)
+    const { type, value } = msg
+    if (type == 2) {
+      store.commit('classInfo/setCurtainStatus',value==0?true:false)
+    } else if (type == 3) {
+      store.commit('classInfo/setFanStatus',value==1?true:false)
+    } else if (type == 1) {
+      store.commit('lampInfo/setLampStatus',value==1?true:false)   
+  }
+  })
+  ws_sign = makeWs('/G', data => {
+    const msg = JSON.parse(data)
+    if (/签到/.test(msg)) {
+      store.commit('classInfo/setSignInInfo',true)
+    } else if (/签退/.test(msg)){
+      store.commit('classInfo/setSignInInfo',false)
+    }
+  })  
 })
 onBeforeUnmount(() => {
-  // ws_blu.close(1000)
-  // ws_blu = null
-  // ws_approve.close(1000)
-  // ws_approve = null
-  // ws_sen.close(1000)
-  // ws_sen = null
-  // ws_switch.close(1000)
-  // ws_switch = null
-  //ws_sign.close(1000)
-  // ws_sign = null
+  ws_blu.close(1000)
+  ws_blu = null
+  ws_approve.close(1000)
+  ws_approve = null
+  ws_sen.close(1000)
+  ws_sen = null
+  ws_switch.close(1000)
+  ws_switch = null
+  ws_sign.close(1000)
+  ws_sign = null
 })
 </script>
 

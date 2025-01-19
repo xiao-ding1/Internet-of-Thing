@@ -138,7 +138,49 @@ async function changeStatus() {
         }
     }
 }
-const socket_blu = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/F?Authorization=${sessionStorage.getItem("token")}`)
+function makeNewSocket(url) {
+    let socket
+    let wsUrl ="ws://8.134.218.209/api/ws"+url+`?Authorization=${sessionStorage.getItem("token")}`;
+    // 避免重复连接
+    let lockReconnect = false;
+    // 定时任务
+    let tt;
+    createWebSocket()
+    return socket
+    function createWebSocket() {
+      try {
+          socket = new WebSocket(wsUrl);
+          init();
+      } catch(e) {
+          console.log('ws连接错误' + e)
+          //重连
+          reconnect();
+      }
+      return socket
+    }
+    function init() {
+      socket.onopen = function () {
+          console.log('连接成功');
+      }
+      socket.onclose = function (e) {
+        if (e.code != 1000){
+          reconnect();
+        }
+      }
+    }
+    function reconnect() {
+      if(lockReconnect) {
+          return;
+        };
+        lockReconnect = true;
+        tt && clearTimeout(tt);
+        tt = setTimeout(function () {
+          createWebSocket();
+          lockReconnect = false;
+        }, 2000);
+    }
+}
+let socket_blu = makeNewSocket('\F')
 watch([isConnect.value, isOn.value], ([newIsConnect, newIsOn], _) => {
     if (!newIsConnect) {
         socket_blu.send("not connect")
@@ -149,7 +191,8 @@ watch([isConnect.value, isOn.value], ([newIsConnect, newIsOn], _) => {
     }
 })
 onBeforeMount(() => {
-    socket_blu.close()
+    socket_blu.close(1000)
+    socket_blu = null
 })
 </script>
     

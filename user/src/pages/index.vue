@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted,  onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { request } from '@/request/request';
@@ -86,105 +86,82 @@ let socket_switch
 const store = useStore()
 onMounted(() => {
   setMenuItemStyles()
-  // socket_ord = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/B?Authorization=${sessionStorage.getItem('token')}`)
-  // socket_ord.onopen = function () {
-  //       // ElMessage({
-  //       //     type: "success",
-  //       //     message: "成功连接设备"
-  //       // })
-  //       // console.log("成功连接");
-  //   }
-  //   socket_ord.onmessage = function (e) {
-  //     const msg = e.data
-  //     if (/'通过'/.test(msg)) {
-  //         store.commit('appointInfo/setIsPass',true)
-  //     }
-  //   }
-  //   socket_ord.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   socket_ord.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
-  // socket_sen = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/D?Authorization=${sessionStorage.getItem("token")}`)
-  // socket_sen.onopen = function () {
-  //       // ElMessage({
-  //       //     type: "success",
-  //       //     message: "成功连接设备"
-  //       // })
-  //       // console.log("成功连接");
-  //   }
-  //   socket_sen.onmessage = function (e) {
-  //     const msg = JSON.parse(e.data)
-  //     const { type, value } = msg
-  //     if (type == 1) {
-  //       store.commit('classInfo/setRayNum',value)
-  //     } else if (type == 2) {
-  //       store.commit('classInfo/setTemNum',value)
-  //     }    
-  //   }
-  //   socket_sen.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   socket_sen.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
-  // socket_switch = new WebSocket(`ws://113.45.133.116:9999/api/pushMessage/A?Authorization=${sessionStorage.getItem("token")}`)
-  // socket_switch.onopen = function () {
-  //       // ElMessage({
-  //       //     type: "success",
-  //       //     message: "成功连接设备"
-  //       // })
-  //       // console.log("成功连接");
-  //   }
-  //   socket_switch.onmessage = function (e) {
-  //     const msg = JSON.parse(e.data)
-  //     const { type, value } = msg
-  //     if (type == 2) {
-  //       store.commit('classInfo/setCurtainStatus',value==0?true:false)
-  //     } else if (type == 3) {
-  //       store.commit('classInfo/setFanStatus',value==1?true:false)
-  //     }  else if (type == 4) {
-  //         store.commit('farmInfo/setWetStatus',value==1?true:false)
-  //       } else if (type == 5) {
-  //         store.commit('farmInfo/setTemStatus',value==1?true:false)
-  //       } else if (type == 6) {
-  //         store.commit('farmInfo/setRayStatus',value==1?true:false)
-  //       } else if (type == 1) {
-  //         store.commit('lampInfo/setLampStatus',value==1?true:false)
-  //       }  
-              
-  //   }
-  //   socket_switch.onerror = function (e) {
-  //       // ElMessage({
-  //       //     type: "error",
-  //       //     message: "网络错误，请联系管理员查询错误"
-  //       // })
-  //   }
-  //   socket_switch.onclose = function (e) {
-  //       // if (e.wasClean) {
-  //       //     ElMessage({
-  //       //         type: "info",
-  //       //         message: "连接已断开"
-  //       //     })
-  //       // }
-  // }
+  socket_switch = makeNewSocket('/A', data => {
+    const msg = JSON.parse(data)
+    const { type, value } = msg
+    if (type == 2) {
+      store.commit('classInfo/setCurtainStatus',value==0?true:false)
+    } else if (type == 3) {
+      store.commit('classInfo/setFanStatus',value==1?true:false)
+    }  else if (type == 4) {
+        store.commit('farmInfo/setWetStatus',value==1?true:false)
+      } else if (type == 5) {
+        store.commit('farmInfo/setTemStatus',value==1?true:false)
+      } else if (type == 6) {
+        store.commit('farmInfo/setRayStatus',value==1?true:false)
+      } else if (type == 1) {
+        store.commit('lampInfo/setLampStatus',value==1?true:false)
+      }
+  })
+  socket_ord = makeNewSocket('/C', msg => {
+     if (/'通过'/.test(msg)) {
+          store.commit('appointInfo/setIsPass',true)
+      }
+  })
+  socket_sen = makeNewSocket('/D', data => {
+    const msg = JSON.parse(data)
+    const { type, value } = msg
+    if (type == 1) {
+      store.commit('classInfo/setRayNum',value)
+    } else if (type == 2) {
+      store.commit('classInfo/setTemNum',value)
+    }   
+  })
+  function makeNewSocket(url,handleFn) {
+    let socket
+    let wsUrl ="ws://8.134.218.209/api/ws"+url+`?Authorization=${sessionStorage.getItem("token")}`;
+    // 避免重复连接
+    let lockReconnect = false;
+    // 定时任务
+    let tt;
+    createWebSocket()
+    return socket
+    function createWebSocket() {
+      try {
+          socket = new WebSocket(wsUrl);
+          init();
+      } catch(e) {
+          console.log('ws连接错误' + e)
+          //重连
+          reconnect();
+      }
+      return socket
+    }
+    function init() {
+      socket.onopen = function () {
+        console.log('连接成功');
+      }
+      socket.onclose = function (e) {
+        if (e.code != 1000){
+          reconnect();
+        }
+      }
+      socket.onmessage = function (e) {
+          handleFn(e.data)
+      }
+    }
+    function reconnect() {
+      if(lockReconnect) {
+          return;
+        };
+        lockReconnect = true;
+        tt && clearTimeout(tt);
+        tt = setTimeout(function () {
+          createWebSocket();
+          lockReconnect = false;
+        }, 2000);
+    }
+  }
 })
 
 const handleLogout = () => {
@@ -202,6 +179,14 @@ onMounted (async () => {
   } catch (error) {
     console.error(error)
   }
+})
+onBeforeUnmount(() => {
+  socket_ord.close(1000)
+  socket_ord = null
+  socket_sen.close(1000)
+  socket_sen = null
+  socket_switch.close(1000)
+  socket_switch = null
 })
 </script>
 

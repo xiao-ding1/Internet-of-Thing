@@ -46,7 +46,7 @@ let isClockIn = ref('未签到')
 function checkIsClockIn() {
     api.classFn.getSignInfo().then(res => {
         const { data } = res.data
-        const nowDay = dayjs(new Date()).format('YYYY-MM-DD')
+        const nowDay = dayjs(date.value).format('YYYY-MM-DD')
         data.forEach(ele => {
             const { inTime, outTime } = ele
             //判断是否有今日签到
