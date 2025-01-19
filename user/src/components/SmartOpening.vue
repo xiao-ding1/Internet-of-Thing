@@ -7,34 +7,43 @@
     <div class="myAppointment">
       <div class="subText">我的预约</div>
       <ul v-if="appointInfo.length">
-        <li v-for="(item) of appointInfo" :key="item.id"><el-card class="box-card">
-          <div slot="header" class="card-header">
-            <div>{{ item.id }}</div>
-             <el-tag :type="item.status=='审批通过'?'success':'warning'">{{ item.status }}</el-tag>
-          </div>
-          <ul class="card-content">
-            <li>预约编号：{{item.id}}</li>
-            <li>预约人：{{ item.userName }}</li>
-            <li>设备时间：{{ item.time }}</li>
-            <li>
-              <el-tag
-                type="warning"
-                style="float: right"
-                effect="dark"
-                @click="showDetail"
-                v-if="item.status=='审批通过'"
-                >查询二维码驱动舵机</el-tag
-              >
-            </li>
-          </ul>
-        </el-card></li>
+        <li v-for="(item) of appointInfo" :key="item.id">
+          <el-card class="box-card">
+            <div slot="header" class="card-header">
+              <div>预约详情</div>
+              <el-tag :type="item.status=='待审批'?'warning':item.status=='已失效'?'info':'success'">{{ item.status }}</el-tag>
+            </div>
+            <ul class="card-content">
+              <!-- <li>预约编号：{{item.id}}</li> -->
+              <!-- <li>预约人：{{ item.userName }}</li> -->
+              <li>预约时间：{{ item.time }}</li>
+              <li>
+                <!-- <el-tag
+                  type="warning"
+                  style="float: right"
+                  effect="dark"
+                  @click="showDetail"
+                  v-if="item.status=='审批通过'"
+                  >查询二维码驱动舵机</el-tag
+                > -->
+                <el-button
+                  type="warning"
+                  style="float: right"
+                  @click="openDoor"
+                  v-if="item.status=='审批通过'"
+                  >开门</el-button
+                >
+              </li>
+            </ul>
+          </el-card>
+        </li>
       </ul>
       <div v-else class="notFound">
         <img src="../assets/img/订单.png" alt="">
         <h2 style="color: black;">暂无预约</h2>
       </div>
     </div>
-    <div class="cover" v-if="isShow">
+    <!-- <div class="cover" v-if="isShow">
       <div class="returnBtn" @click="hidDetail"><el-icon><ArrowLeftBold /></el-icon></div>
       <div class="showContent">
           <div class="QR">
@@ -53,7 +62,7 @@
         <el-button type="info">保存二维码</el-button>
         <el-button type="success">扫码驱动舵机</el-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -61,36 +70,49 @@
 import api from '@/request/index'
 import { ref } from "vue";
 import dayjs from 'dayjs'
-let isShow = ref(false);
-function showDetail() {
-  isShow.value = true;
-}
-function hidDetail() {
-  isShow.value = false;
-}
-function appointFn() {
-  api.appoint().then(() => {
-    ElMessage.success("预约成功")
-    let newAppointInfo = {
-      id: '001',
-      userName: '自己的名字',
-      time: dayjs(new Date()).format('YYYY-MM-DD'),
-      status:'待审核'
-    }
-    appointInfo.value.push(newAppointInfo)
+let appointInfo = ref([])
+function getMyAppoint() {
+  api.appointFn.getAppointInfo().then(res => {
+    const { data } = res.data
+    appointInfo.value = []
+    let nowDay = dayjs(new Date()).format('YYYY-MM-DD')
+    data.forEach(ele => {
+      const {updateTime,createTime,approval} = ele
+      let newAppointInfo = {
+        time:updateTime!=null?updateTime:createTime,
+        status:approval==0?'待审批':'审批通过'
+      }
+      if (nowDay != dayjs(newAppointInfo.time).format('YYYY-MM-DD')) {
+        //不是同一天
+        if (newAppointInfo.status == '待审批') {
+          newAppointInfo.status='已失效'
+        } else {
+          newAppointInfo.status='已完成'
+        }
+      }
+      newAppointInfo.time = dayjs(newAppointInfo.time).format('YYYY-MM-DD HH:mm:ss')
+      appointInfo.value.push(newAppointInfo)
+    })
   }).catch(err => {
-    ElMessage.error(`操作失败，错误信息：${err}`)
+    console.error('获取个人预约信息失败，失败信息：',err);
   })
 }
-let appointInfo = ref([
-  {
-    id:'001',
-    userName: '预约名字',
-    time: '预约时间',
-    status:'待审批'
-  }
-])
-
+getMyAppoint()
+function appointFn() {
+  api.appointFn.appoint().then(res => {
+    getMyAppoint()
+    ElMessage.success("预约成功")
+  }).catch(err => {
+    console.error('个人预约失败，失败信息：',err);
+  })
+}
+function openDoor() {
+  api.appointFn.open().then(res => {
+    ElMessageBox.alert("门已开")
+  }).catch(err => {
+    console.error('智能门禁开门失败，失败信息：',err);
+  })
+}
 </script>
 
 <style scoped>
@@ -146,6 +168,9 @@ h1 {
   margin-bottom: 20px;
   font-size: 30px;
 }
+.myAppointment ul li{
+  margin-bottom: 20px;
+}
 .notFound{
   display: flex;
   flex-direction: column;
@@ -166,6 +191,7 @@ h1 {
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 700;
 }
 .card-content {
   padding: 10px;
@@ -188,7 +214,7 @@ h1 {
   font-size: 50px;
   color: #fff;
 }
-.cover {
+/* .cover {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -285,5 +311,5 @@ h1 {
   height: 100px;
   border-radius: 20px;
   font-size: 20px;
-}
+} */
 </style>

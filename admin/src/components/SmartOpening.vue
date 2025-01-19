@@ -31,7 +31,8 @@
         <el-table-column label="操作" fixed="right">
             <template #default="scope">
                 <el-button @click="passFn" v-if="scope.row.status=='待审批'">审批通过</el-button>
-                 <el-tag type="success" v-else>已通过</el-tag>
+                <el-tag type="success" v-else-if="scope.row.status=='已通过'">已通过</el-tag>
+                <el-tag type="info" v-else>已失效</el-tag>
             </template>
         </el-table-column>
     </el-table>
@@ -77,11 +78,18 @@
         api.open.getReservation().then(res => {
         tableAllData.value = []
         const { data } = res.data
+        const nowDay = dayjs(new Date()).format('YYYY-MM-DD')
         data.forEach(ele => {
             const {updateTime,createTime,approval} = ele
             const newItem = {
                 time: updateTime != null ? updateTime : createTime,
                 status:approval==0?'待审批':'已通过'
+            }
+            if (newItem.status == '待审批') {
+                if (nowDay != dayjs(newItem.time).format('YYYY-MM-DD')) {
+                //不是同一天
+                    newItem.status = '已失效'
+                }
             }
             newItem.time = dayjs(newItem.time).format('YYYY-MM-DD HH:mm:ss')
             tableAllData.value.push(newItem)

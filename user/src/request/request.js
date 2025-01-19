@@ -21,7 +21,7 @@ request.interceptors.request.use(
   (config) => {
     // 配置请求头
     config.headers["Content-Type"] = "application/json;charset=UTF-8";
-    config.headers["authorization"] = token();
+    config.headers["Authorization"] = token();
     return config;
   },
   (error) => {
@@ -35,8 +35,8 @@ request.interceptors.response.use(
     // 检查后端的自定义业务状态码
     const { code } = response.data;
     if (code && code !== 200) {
-      ElMessageBox.alert(response.data.message);
-      return Promise.reject(new Error(response.data.message || "业务逻辑错误"));
+      ElMessageBox.alert(response.data.msg);
+      return Promise.reject(new Error(response.data.msg || "业务逻辑错误"));
     }
     return response;
   },

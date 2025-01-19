@@ -1,9 +1,9 @@
-import appoint from "./modules/appointOpening";
+import appointFn from "./modules/appointOpening";
 import classFn from "./modules/class"
 import getSwitch from "./modules/switch";
 
 export default {
-  appoint,
+  appointFn,
   classFn,
   getSwitch
 }

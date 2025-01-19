@@ -8,6 +8,7 @@ const controlCurtain = (status) => request.get(`/class/curtain/${status}`)
 //签到
 const signIn = () => request.get('/attendance/checkIn')
 const signOut = () => request.get('/attendance/checkOut')
+const getSignInfo = ()=>request.get('/attendance')
 
 export default {
   setFanFlag,
@@ -15,5 +16,6 @@ export default {
   controlFan,
   controlCurtain,
   signIn,
-  signOut
+  signOut,
+  getSignInfo
 }

@@ -4,13 +4,14 @@
     </div>
     <div class="nowStatus">
       <div class="deco">
-        日历背景
+        <!-- 日历背景 -->
       </div>
       <div class="clockIn">
         <p>{{nowTime.day}}</p>
         <p>{{`${nowTime.year}.${nowTime.month}`}}</p>
         <p>{{ nowTime.date }}</p>
-        <el-button type="primary" plain>{{ isClockIn?"离开教室":"立即打卡" }}</el-button>
+        <el-tag type="success" class="action" v-if="isClockIn=='已完成'">今日已完成签到</el-tag>
+        <el-button type="primary" plain class="action" v-else @click="signFn">{{ isClockIn=='未签到'?'立即打卡':'离开教室' }}</el-button>
       </div>
     </div>
     <div class="subText">窗帘和风扇情况</div>
@@ -24,7 +25,7 @@
 import DeviceCard from './DeviceCard.vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import api from '@/request/index'
-let isClockIn = ref(false)
+import dayjs from 'dayjs'
 let date = ref(new Date())
 let week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
 let nowTime = {
@@ -41,6 +42,45 @@ onMounted(() => {
   api.getSwitch(2)//窗帘
   api.getSwitch(3)//风扇
 })
+let isClockIn = ref('未签到')
+function checkIsClockIn() {
+    api.classFn.getSignInfo().then(res => {
+        const { data } = res.data
+        const nowDay = dayjs(new Date()).format('YYYY-MM-DD')
+        data.forEach(ele => {
+            const { inTime, outTime } = ele
+            //判断是否有今日签到
+            if (nowDay == dayjs(inTime).format('YYYY-MM-DD')) {
+                if (outTime == null) {
+                    isClockIn.value = '未签退'
+                } else {
+                    isClockIn.value = '已完成'
+                }
+            }
+        })
+    }).catch(err => {
+      console.error("获取签到信息失败，错误信息",err)
+    })
+}
+checkIsClockIn()
+function signFn() {
+  if (isClockIn.value == '未签到') {
+    api.classFn.signIn().then(res => {
+      checkIsClockIn()
+      ElMessage.success("你已成功签到")
+    }).catch(err => {
+      console.error("签到操作失败，错误信息",err)
+    })
+  } else if(isClockIn.value == '未签退'){
+    api.classFn.signOut().then(res => {
+      checkIsClockIn()
+      ElMessage.success("你已成功签退")
+      ElMessage.success("已完成今日签到")
+    }).catch(err => {
+      console.error("签退操作失败，错误信息",err)
+    })
+  }
+}
 onBeforeUnmount(() => {
   clearInterval(timeId)
 })
@@ -112,7 +152,7 @@ onBeforeUnmount(() => {
       font-size: 120px;
       font-weight: 700;
     }
-    .clockIn button{
+    .clockIn .action{
       margin: 40px auto;
       width: 90%;
       height: 80px;
