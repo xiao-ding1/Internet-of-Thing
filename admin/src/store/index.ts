@@ -19,19 +19,16 @@ const blueInfo = {
 const smartOpeningInfo = {
   namespaced:true,
   state: {
-    tableInfo: [{
-      userName: "小李",
-      status:"待审批"
-    }]
+    newMsg:0
   },
   mutations: {
     //收到信息
-    addTableInfo: (state, newInfo) => {
-      state.tableInfo.push(newInfo)
+    addTableInfo: (state) => {
+      state.newMsg = state.newMsg+1
     },
     //删除信息
     clearTableInfo: (state) => {
-      state.tableInfo = []
+      state.newMsg = 0
     }
   }
 }

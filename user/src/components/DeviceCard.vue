@@ -34,7 +34,7 @@
 <script setup name='DeviceCard'>
 import { ElInputNumber } from 'element-plus'
 import { ref, h, onMounted, computed} from 'vue'
-import { setFanFlag, setCurtainFlag, controlFan, controlCurtain } from '@/request/modules/class'
+import api from '@/request/index'
 import { useStore } from 'vuex'
 const store = useStore()
 let { device} = defineProps(['device'])
@@ -136,8 +136,8 @@ onMounted(() => {
         deviceInfo.value = {
             ...deviceInfo.value,
             deviceName: '风扇',
-            setFlagFn: setFanFlag,
-            controlDeviceFn:controlFan
+            setFlagFn: api.classFn.setFanFlag,
+            controlDeviceFn:api.classFn.controlFan
         }
         num = computed(() => store.state.classInfo.temNum+'°')
         isOpening = computed(() => store.state.classInfo.fanStatus)
@@ -148,8 +148,8 @@ onMounted(() => {
         deviceInfo.value = {
             ...deviceInfo.value,
             deviceName: '窗帘',
-            setFlagFn: setCurtainFlag,
-            controlDeviceFn:controlCurtain
+            setFlagFn: api.classFn.setCurtainFlag,
+            controlDeviceFn:api.classFn.controlCurtain
         }
         num = computed(() => store.state.classInfo.rayNum+'lx')
         isOpening = computed(() => store.state.classInfo.curtainStatus)

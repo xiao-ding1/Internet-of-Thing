@@ -58,7 +58,7 @@
 </template>
 
 <script setup name="smartClass">
-import { appoint } from "@/request/modules/appointOpening";
+import api from '@/request/index'
 import { ref } from "vue";
 import dayjs from 'dayjs'
 let isShow = ref(false);
@@ -69,7 +69,7 @@ function hidDetail() {
   isShow.value = false;
 }
 function appointFn() {
-  appoint().then(() => {
+  api.appoint().then(() => {
     ElMessage.success("预约成功")
     let newAppointInfo = {
       id: '001',

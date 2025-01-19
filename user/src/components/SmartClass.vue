@@ -22,7 +22,8 @@
     
 <script setup name='smartClass'>
 import DeviceCard from './DeviceCard.vue';
-import {onBeforeUnmount, onMounted, ref} from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import api from '@/request/index'
 let isClockIn = ref(false)
 let date = ref(new Date())
 let week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
@@ -37,6 +38,8 @@ onMounted(() => {
   timeId = setInterval(() => {
     date.value = new Date()
   }, 24 * 60 * 60)
+  api.getSwitch(2)//窗帘
+  api.getSwitch(3)//风扇
 })
 onBeforeUnmount(() => {
   clearInterval(timeId)

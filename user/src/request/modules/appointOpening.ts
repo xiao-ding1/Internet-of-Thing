@@ -1,2 +1,3 @@
 import { request } from "../request";
-export const appoint = ()=>request('/reservation/book')
+const appoint = () => request('/reservation/book')
+export default appoint
