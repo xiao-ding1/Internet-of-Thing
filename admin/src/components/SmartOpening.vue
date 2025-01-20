@@ -1,5 +1,7 @@
 <template>
-    <Title :text="text" :subtext="subText"/>
+    <Loading v-if="loading"/>
+    <div>
+        <Title :text="text" :subtext="subText"/>
     <div class="action">
         <div class="filterAction">
             <el-check-tag :checked="showStatus=='all'?true:false" type="primary" @change="changeAll">全部 {{ tableAllData.length }}</el-check-tag>
@@ -36,6 +38,7 @@
             </template>
         </el-table-column>
     </el-table>
+    </div>
 </template>
     
 <script lang='ts' setup name='smartOpening'>
@@ -44,6 +47,8 @@
     import Title from './Title.vue';
     import api from '@/request/index'
     import { useStore } from 'vuex';
+    import Loading from './Loading.vue';
+    let loading = ref(false)
     const store = useStore()
     const text = '智    能    门    禁'
     const subText = '在此审批用户出行请求'
@@ -75,26 +80,28 @@
     })
     const tableAllData = ref([])
     function getTableInfo() {
+        loading.value = true
         api.open.getReservation().then(res => {
-        tableAllData.value = []
-        const { data } = res.data
-        const nowDay = dayjs(new Date()).format('YYYY-MM-DD')
-        data.forEach(ele => {
-            const {updateTime,createTime,approval} = ele
-            const newItem = {
-                time: updateTime != null ? updateTime : createTime,
-                status:approval==0?'待审批':'已通过'
-            }
-            if (newItem.status == '待审批') {
-                if (nowDay != dayjs(newItem.time).format('YYYY-MM-DD')) {
-                //不是同一天
-                    newItem.status = '已失效'
+            tableAllData.value = []
+            const { data } = res.data
+            const nowDay = dayjs(new Date()).format('YYYY-MM-DD')
+            data.forEach(ele => {
+                const {updateTime,createTime,approval} = ele
+                const newItem = {
+                    time: updateTime != null ? updateTime : createTime,
+                    status:approval==0?'待审批':'已通过'
                 }
-            }
-            newItem.time = dayjs(newItem.time).format('YYYY-MM-DD HH:mm:ss')
-            tableAllData.value.push(newItem)
+                if (newItem.status == '待审批') {
+                    if (nowDay != dayjs(newItem.time).format('YYYY-MM-DD')) {
+                    //不是同一天
+                        newItem.status = '已失效'
+                    }
+                }
+                newItem.time = dayjs(newItem.time).format('YYYY-MM-DD HH:mm:ss')
+                tableAllData.value.push(newItem)
+            })
+            loading.value = false
         })
-    })
     }
     //搜索内容
     let searchKey = ref('')
@@ -115,6 +122,7 @@
     })
     //审批通过
     function passFn() {
+        loading.value = true
         api.open.pass().then(() => {
             ElMessage({
                 type: "success",
@@ -123,6 +131,8 @@
             store.commit('smartOpeningInfo/clearTableInfo')
         }).catch(err => {
             ElMessage.error(`操作失败，错误信息${err}`)
+        }).finally(() => {
+            loading.value = false
         })
     }
     watch(store.state.smartOpeningInfo.newMsg,getTableInfo,{immediate:true})

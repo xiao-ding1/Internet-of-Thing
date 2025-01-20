@@ -1,5 +1,7 @@
 <template>
-    <Title :text="text" :subtext="subtext"/>
+    <Loading v-if="loading"/>
+    <div>
+        <Title :text="text" :subtext="subtext"/>
     <el-container>
         <el-main>
             <div class="tableBox">
@@ -39,6 +41,7 @@
             </div>
         </el-aside>
     </el-container>
+    </div>
 </template>
     
 <script setup name='SmartClass'>
@@ -47,15 +50,18 @@ import { useStore } from 'vuex'
 import api from '../request/index'
 import Title from './Title.vue'
 import dayjs from 'dayjs'
+import Loading from './Loading.vue'
 const text = '智    能    教    室'
 const subtext = '用科技帮助学生实现高效学习'
 
+let loading = ref(false)
 //对于数据
 const store = useStore()
 let searchKey = ref('')
 let tableData = ref([])
 let isSignIn = ref('未签到')
 function getTableData() {
+    loading.value = true
     api.classFn.getSignInfo().then(res => {
         tableData.value = []
         const { data } = res.data
@@ -89,6 +95,7 @@ function getTableData() {
             }
             tableData.value.push(item)
         })
+        loading.value = false
     })
 }
 //搜索内容过滤的最后呈现
